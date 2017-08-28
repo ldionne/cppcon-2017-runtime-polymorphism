@@ -37,7 +37,213 @@
 
 ==============================================================================
 
-...
+### What is runtime polymorphism <br> and when do you need it?
+
+====================
+
+### Passing related objects to functions
+
+```c++
+struct Car   { void accelerate(); };
+struct Truck { void accelerate(); };
+struct Plane { void accelerate(); };
+
+// Should work on anything with an accelerate() method
+void foo(??? vehicle) {
+  ...
+  vehicle.accelerate();
+  ...
+}
+```
+
+----
+
+### Templates often do the trick
+
+```c++
+template <typename Vehicle>
+void foo(Vehicle vehicle) {
+  ...
+  vehicle.accelerate();
+  ...
+}
+
+int main() {
+  Car car{...};
+  Truck truck{...};
+
+  foo(car);
+  foo(truck);
+}
+```
+
+----
+
+### But sometimes, they're not enough
+
+TODO: find place where they're not enough
+
+====================
+
+### Storing related objects in containers
+
+```c++
+int main() {
+  // Should store anything that has an accelerate() method
+  std::vector<???> vehicles;
+
+  vehicles.push_back(Car{...});
+  vehicles.push_back(Truck{...});
+  vehicles.push_back(Plane{...});
+
+  for (auto& vehicle : vehicles) {
+    vehicle.accelerate();
+  }
+}
+```
+
+----
+
+### Tuples sometimes do the trick
+#### But generally, not
+
+```c++
+int main() {
+  std::tuple<Car, Truck, Plane> vehicles = {
+    Car{...}, Truck{...}, Plane{...}
+  };
+
+  // tuple size is fixed, can't add more objects
+  // tuple order is fixed, can't reorder it
+}
+```
+
+====================
+
+### Returning related objects from a function
+
+```c++
+??? getVehicle(std::istream& user) {
+  std::string choice;
+  user >> choice;
+  if      (choice == "car")   return Car{...};
+  else if (choice == "truck") return Truck{...};
+  else if (choice == "plane") return Plane{...};
+  else                        die();
+}
+```
+
+====================
+
+### Bottom line:
+#### Manipulating related types with different representations
+
+====================
+
+### C++ has a solution for that!
+
+----
+
+<br><br><br>
+### It's called inheritance
+<br><br><br> <!-- push the div to the bottom (yes, I'm that bad with CSS) -->
+
+<small class="fragment fade-in" style="position:absolute; bottom:0;">and it sucks</small>
+
+====================
+
+### Let's revisit our use cases
+
+----
+
+### Passing related objects to functions
+
+```c++
+struct Vehicle {
+  virtual void accelerate();
+};
+
+struct Car   : Vehicle { void accelerate() override; };
+struct Truck : Vehicle { void accelerate() override; };
+struct Plane : Vehicle { void accelerate() override; };
+
+// Should work on anything with an accelerate() method
+// Now works with anything that inherits from Vehicle, which is close
+void foo(Vehicle& vehicle) {
+  ...
+  vehicle.accelerate();
+  ...
+}
+```
+
+TODO: Is it okay to mix the definition of the hierarchy with the first use case?
+
+----
+
+TODO: Revisit other use cases
+
+====================
+
+### Under the hood
+
+TODO: Show diagram of how it's implemented and why it works that way
+
+====================
+
+### Problems
+
+TODO: Show problems with inheritance that were surfaced by use cases
+
+====================
+
+### What we actually wanted
+
+----
+
+### Passing related objects to functions
+
+```c++
+interface Vehicle { void accelerate(); };
+
+struct Car   { void accelerate(); };
+struct Truck { void accelerate(); };
+struct Plane { void accelerate(); };
+
+// Will work on anything that satisfies the interface
+void foo(Vehicle vehicle) {
+  ...
+  vehicle.accelerate();
+  ...
+}
+```
+
+TODO: Is it okay to mix the definition of the interface with the first use case?
+
+----
+
+TODO: show other use cases
+
+====================
+
+### Benefits of this high-level approach
+
+TODO: Talk about benefits of adopting a value and concepts-based approach
+
+====================
+
+TODO: we can now start presenting the policy-based approach
+
+==============================================================================
+
+### The Dyno library is available
+
+https://github.com/ldionne/dyno
+
+----
+
+### Thank you
+
+https://ldionne.com
 
         </script>
         </section>
@@ -49,7 +255,7 @@
 
     <script>
       Reveal.initialize({
-        slideNumber: false, // 'c/t' -> useful when authoring to know how many slides there are
+        slideNumber: 'c/t', // 'c/t' -> useful when authoring to know how many slides there are
         history: true,
         transition: 'none',
 
