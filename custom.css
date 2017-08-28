@@ -14,3 +14,11 @@
   border:none;
   box-shadow:none;
 }
+
+/* Hide navigation arrows, which don't add anything since we don't even use transitions */
+.reveal .controls .navigate-down,
+.reveal .controls .navigate-up,
+.reveal .controls .navigate-right,
+.reveal .controls .navigate-left {
+  display: none;
+}
