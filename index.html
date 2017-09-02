@@ -41,13 +41,19 @@
 
 ====================
 
-### Passing related objects to functions
+### Assume the following
 
 ```c++
 struct Car   { void accelerate(); };
 struct Truck { void accelerate(); };
 struct Plane { void accelerate(); };
+```
 
+====================
+
+### Passing related objects to functions
+
+```c++
 // Should work on anything with an accelerate() method
 void foo(??? vehicle) {
   ...
@@ -85,6 +91,21 @@ TODO: find place where they're not enough
 
 ====================
 
+### Returning related objects from a function
+
+```c++
+??? getVehicle(std::istream& user) {
+  std::string choice;
+  user >> choice;
+  if      (choice == "car")   return Car{...};
+  else if (choice == "truck") return Truck{...};
+  else if (choice == "plane") return Plane{...};
+  else                        die();
+}
+```
+
+====================
+
 ### Storing related objects in containers
 
 ```c++
@@ -105,33 +126,17 @@ int main() {
 ----
 
 ### Tuples sometimes do the trick
-#### But generally, not
 
 ```c++
-int main() {
-  std::tuple<Car, Truck, Plane> vehicles = {
-    Car{...}, Truck{...}, Plane{...}
-  };
-
-  // tuple size is fixed, can't add more objects
-  // tuple order is fixed, can't reorder it
-}
+std::tuple<Car, Truck, Plane> vehicles{
+  Car{...},
+  Truck{...},
+  Plane{...}
+};
 ```
 
-====================
-
-### Returning related objects from a function
-
-```c++
-??? getVehicle(std::istream& user) {
-  std::string choice;
-  user >> choice;
-  if      (choice == "car")   return Car{...};
-  else if (choice == "truck") return Truck{...};
-  else if (choice == "plane") return Plane{...};
-  else                        die();
-}
-```
+- But size is fixed, can't add more objects
+- Order is also fixed, can't reorder elements
 
 ====================
 
@@ -154,21 +159,25 @@ int main() {
 
 ### Let's revisit our use cases
 
-----
+====================
 
-### Passing related objects to functions
+### We now have
 
 ```c++
-struct Vehicle {
-  virtual void accelerate();
-};
+struct Vehicle { virtual void accelerate(); };
 
 struct Car   : Vehicle { void accelerate() override; };
 struct Truck : Vehicle { void accelerate() override; };
 struct Plane : Vehicle { void accelerate() override; };
+```
 
+====================
+
+### Passing related objects to functions
+
+```c++
 // Should work on anything with an accelerate() method
-// Now works with anything that inherits from Vehicle, which is close
+// Works with anything that inherits from Vehicle, we're close
 void foo(Vehicle& vehicle) {
   ...
   vehicle.accelerate();
@@ -176,40 +185,13 @@ void foo(Vehicle& vehicle) {
 }
 ```
 
-TODO: Is it okay to mix the definition of the hierarchy with the first use case?
+- reference semantics now baked in
 
 ----
 
-TODO: Revisit other use cases
-
-====================
-
-### Under the hood
-
-TODO: Show diagram of how it's implemented and why it works that way
-
-====================
-
-### Problems
-
-TODO: Show problems with inheritance that were surfaced by use cases
-
-====================
-
-### What we actually wanted
-
-----
-
-### Passing related objects to functions
+### Don't even try this
 
 ```c++
-interface Vehicle { void accelerate(); };
-
-struct Car   { void accelerate(); };
-struct Truck { void accelerate(); };
-struct Plane { void accelerate(); };
-
-// Will work on anything that satisfies the interface
 void foo(Vehicle vehicle) {
   ...
   vehicle.accelerate();
@@ -217,7 +199,122 @@ void foo(Vehicle vehicle) {
 }
 ```
 
-TODO: Is it okay to mix the definition of the interface with the first use case?
+Note: Passing a derived type will slice it
+
+====================
+
+### Returning related objects from a function
+
+```c++
+std::unique_ptr<Vehicle> getVehicle(std::istream& user) {
+  std::string choice;
+  user >> choice;
+  if      (choice == "car")   return std::make_unique<Car>(...);
+  else if (choice == "truck") return std::make_unique<Truck>(...);
+  else if (choice == "plane") return std::make_unique<Plane>(...);
+  else                        die();
+}
+```
+
+- we're making an allocation
+- nullable semantics now baked in (pointer)
+- we have a bug
+
+----
+
+### Virtual destructors, someone?
+
+```c++
+struct Vehicle {
+  virtual void accelerate();
+  virtual ~Vehicle() { }
+//^^^^^^^
+};
+```
+
+----
+
+### Also, I was being nice
+#### I see the following more often
+
+```c++
+Vehicle* getVehicle(std::istream& user) {
+  std::string choice;
+  user >> choice;
+  if      (choice == "car")   return new Car{...};
+  else if (choice == "truck") return new Truck{...};
+  else if (choice == "plane") return new Plane{...};
+  else                        die();
+}
+```
+
+- now we're in memory management hell
+
+====================
+
+### Storing related objects in containers
+
+```c++
+int main() {
+  // Should store anything that has an accelerate() method
+  // Works with anything derived from Vehicle, we're close
+  std::vector<std::unique_ptr<Vehicle>> vehicles;
+
+  vehicles.push_back(std::make_unique<Car>(...));
+  vehicles.push_back(std::make_unique<Truck>(...));
+  vehicles.push_back(std::make_unique<Plane>(...));
+
+  for (auto& vehicle : vehicles) {
+    vehicle->accelerate();
+  }
+}
+```
+
+----
+
+- can't copy the container anymore (`unique_ptr`)
+  + if you could, it wouldn't do what you expect
+- we're making allocations
+- doesn't work well with standard algorithms
+
+====================
+
+<br><br><br>
+### Now, everyone knows what I think about inheritance
+<br><br><br> <!-- push the div to the bottom (yes, I'm that bad with CSS) -->
+
+<small class="fragment fade-in" style="position:absolute; bottom:0;">it sucks</small>
+
+====================
+
+### Let's look under the hood
+
+![Classic inheritance](classic-inheritance.png)
+
+====================
+
+### What we actually wanted
+
+```c++
+interface Vehicle { void accelerate(); };
+
+struct Car   { void accelerate(); };
+struct Truck { void accelerate(); };
+struct Plane { void accelerate(); };
+```
+
+----
+
+### Passing related objects to functions
+
+```c++
+// Will work on anything that satisfies the Vehicle interface
+void foo(Vehicle vehicle) {
+  ...
+  vehicle.accelerate();
+  ...
+}
+```
 
 ----
 

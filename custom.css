@@ -8,6 +8,11 @@
     max-height: 550px;
 }
 
+/* And also wider */
+.reveal pre {
+  width: 100%;
+}
+
 /* Remove the border and the background from images */
 .reveal section img {
   background:none;
@@ -20,5 +25,5 @@
 .reveal .controls .navigate-up,
 .reveal .controls .navigate-right,
 .reveal .controls .navigate-left {
-  display: none;
+  /*display: none;*/
 }
