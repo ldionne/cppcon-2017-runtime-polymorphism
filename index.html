@@ -51,7 +51,7 @@ struct Plane { void accelerate(); };
 
 ====================
 
-### Passing related objects to functions
+### Passing related types to a function
 
 ```c++
 // Should work on anything with an accelerate() method
@@ -91,7 +91,7 @@ TODO: find place where they're not enough
 
 ====================
 
-### Returning related objects from a function
+### Returning related types from a function
 
 ```c++
 ??? getVehicle(std::istream& user) {
@@ -106,7 +106,7 @@ TODO: find place where they're not enough
 
 ====================
 
-### Storing related objects in containers
+### Storing related types in a container
 
 ```c++
 int main() {
@@ -173,7 +173,7 @@ struct Plane : Vehicle { void accelerate() override; };
 
 ====================
 
-### Passing related objects to functions
+### Passing related types to a function
 
 ```c++
 // Should work on anything with an accelerate() method
@@ -203,7 +203,7 @@ Note: Passing a derived type will slice it
 
 ====================
 
-### Returning related objects from a function
+### Returning related types from a function
 
 ```c++
 std::unique_ptr<Vehicle> getVehicle(std::istream& user) {
@@ -252,7 +252,7 @@ Vehicle* getVehicle(std::istream& user) {
 
 ====================
 
-### Storing related objects in containers
+### Storing related types in a container
 
 ```c++
 int main() {
@@ -305,7 +305,7 @@ struct Plane { void accelerate(); };
 
 ----
 
-### Passing related objects to functions
+### Passing related types to a function
 
 ```c++
 // Will work on anything that satisfies the Vehicle interface
@@ -318,17 +318,102 @@ void foo(Vehicle vehicle) {
 
 ----
 
-TODO: show other use cases
+### Returning related types from a function
+
+```c++
+Vehicle getVehicle(std::istream& user) {
+  std::string choice;
+  user >> choice;
+  if      (choice == "car")   return Car{...};
+  else if (choice == "truck") return Truck{...};
+  else if (choice == "plane") return Plane{...};
+  else                        die();
+}
+```
+
+----
+
+### Storing related types in a container
+
+```c++
+int main() {
+  std::vector<Vehicle> vehicles;
+
+  vehicles.push_back(Car{...});
+  vehicles.push_back(Truck{...});
+  vehicles.push_back(Plane{...});
+
+  for (auto& vehicle : vehicles) {
+    vehicle.accelerate();
+  }
+}
+```
 
 ====================
 
-### Benefits of this high-level approach
+### How might that work?
 
-TODO: Talk about benefits of adopting a value and concepts-based approach
+```c++
+struct Vehicle {
+  template <typename Any>
+    // enabled only when vehicle.accelerate() is valid
+  Vehicle(Any vehicle)
+    : impl_{std::make_unique<VehicleImpl<Any>>(vehicle)}
+  { }
+
+  Vehicle(Vehicle const& other)
+    : impl_{other.impl_->clone()}
+  { }
+
+  void accelerate()
+  { impl_->accelerate(); }
+
+private:
+  std::unique_ptr<VehicleBase> impl_;
+};
+```
+
+TODO: The following two slides are way too dense
+
+----
+
+```c++
+struct VehicleBase {
+  virtual std::unique_ptr<VehicleBase> clone() const = 0;
+  virtual void accelerate_impl() = 0;
+  virtual ~VehicleBase() { }
+};
+
+template <typename Any>
+struct VehicleImpl : VehicleBase {
+  VehicleImpl(Any vehicle)
+    : vehicle_(vehicle)
+  { }
+
+  std::unique_ptr<VehicleBase> clone() const override
+  { return new VehicleImpl(vehicle_); }
+
+  void accelerate() override
+  { vehicle_.accelerate(); }
+
+  Any vehicle_;
+};
+```
+
+----
+
+### Just like inheritance under the hood
+
+![Naive type erasure](naive-type-erasure.png)
+
+----
+
+### But we're decoupled from inheritance
+#### Let's have some fun
 
 ====================
 
-TODO: we can now start presenting the policy-based approach
+TODO: We can now talk about policies
 
 ==============================================================================
 
