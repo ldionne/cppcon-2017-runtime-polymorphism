@@ -393,7 +393,7 @@ struct VehicleImpl : VehicleBase {
   std::unique_ptr<VehicleBase> clone() const override
   { return new VehicleImpl(vehicle_); }
 
-  void accelerate() override
+  void accelerate_impl() override
   { vehicle_.accelerate(); }
 
   Any vehicle_;
