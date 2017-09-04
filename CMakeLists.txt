@@ -3,8 +3,11 @@
 
 cmake_minimum_required(VERSION 3.8)
 
-add_executable(naive-type-erasure code/naive-type-erasure.cpp)
-target_compile_features(naive-type-erasure PRIVATE cxx_std_14)
+add_executable(naive code/naive.cpp)
+target_compile_features(naive PRIVATE cxx_std_14)
 
-add_executable(naive-type-erasure-split-ptr code/naive-type-erasure-split-ptr.cpp)
-target_compile_features(naive-type-erasure-split-ptr PRIVATE cxx_std_14)
+add_executable(naive-split-ptr code/naive-split-ptr.cpp)
+target_compile_features(naive-split-ptr PRIVATE cxx_std_14)
+
+add_executable(sbo-split-ptr code/sbo-split-ptr.cpp)
+target_compile_features(sbo-split-ptr PRIVATE cxx_std_14)
