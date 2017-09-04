@@ -4,11 +4,13 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 
+// sample(VehicleBase)
 struct VehicleBase {
   virtual std::unique_ptr<VehicleBase> clone() const = 0;
-  virtual void accelerate_impl() = 0;
+  virtual void accelerate() = 0;
   virtual ~VehicleBase() { }
 };
 
@@ -21,12 +23,14 @@ struct VehicleImpl : VehicleBase {
   std::unique_ptr<VehicleBase> clone() const override
   { return std::make_unique<VehicleImpl>(vehicle_); }
 
-  void accelerate_impl() override
+  void accelerate() override
   { vehicle_.accelerate(); }
 
   Any vehicle_;
 };
+// end-sample
 
+// sample(Vehicle)
 struct Vehicle {
   template <typename Any>
     // enabled only when vehicle.accelerate() is valid
@@ -39,11 +43,12 @@ struct Vehicle {
   { }
 
   void accelerate()
-  { impl_->accelerate_impl(); }
+  { impl_->accelerate(); }
 
 private:
   std::unique_ptr<VehicleBase> impl_;
 };
+// end-sample
 
 
 struct Car {
@@ -52,11 +57,28 @@ struct Car {
   void accelerate() { std::cout << "Car::accelerate()" << std::endl; }
 };
 
-void foo(Vehicle vehicle) {
-  vehicle.accelerate();
-}
+struct Truck {
+  std::string make;
+  int year;
+  void accelerate() { std::cout << "Truck::accelerate()" << std::endl; }
+};
 
+struct Plane {
+  std::string make;
+  std::string model;
+  void accelerate() { std::cout << "Plane::accelerate()" << std::endl; }
+};
+
+// sample(main)
 int main() {
-  Car audi{"Audi", 2017};
-  foo(audi);
+  std::vector<Vehicle> vehicles;
+
+  vehicles.push_back(Car{"Audi", 2017});
+  vehicles.push_back(Truck{"Chevrolet", 2015});
+  vehicles.push_back(Plane{"Boeing", "747"});
+
+  for (auto& vehicle : vehicles) {
+    vehicle.accelerate();
+  }
 }
+// end-sample

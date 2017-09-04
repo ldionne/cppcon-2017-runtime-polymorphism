@@ -340,70 +340,19 @@ Vehicle getVehicle(std::istream& user) {
 
 ### Storing related types in a container
 
-```c++
-int main() {
-  std::vector<Vehicle> vehicles;
-
-  vehicles.push_back(Car{...});
-  vehicles.push_back(Truck{...});
-  vehicles.push_back(Plane{...});
-
-  for (auto& vehicle : vehicles) {
-    vehicle.accelerate();
-  }
-}
-```
+<pre><code data-sample='code/naive-type-erasure.cpp#main'></code></pre>
 
 ====================
 
 ### How might that work?
 
-```c++
-struct Vehicle {
-  template <typename Any>
-    // enabled only when vehicle.accelerate() is valid
-  Vehicle(Any vehicle)
-    : impl_{std::make_unique<VehicleImpl<Any>>(vehicle)}
-  { }
-
-  Vehicle(Vehicle const& other)
-    : impl_{other.impl_->clone()}
-  { }
-
-  void accelerate()
-  { impl_->accelerate(); }
-
-private:
-  std::unique_ptr<VehicleBase> impl_;
-};
-```
+<pre><code data-sample='code/naive-type-erasure.cpp#Vehicle'></code></pre>
 
 TODO: The following two slides are way too dense
 
 ----
 
-```c++
-struct VehicleBase {
-  virtual std::unique_ptr<VehicleBase> clone() const = 0;
-  virtual void accelerate_impl() = 0;
-  virtual ~VehicleBase() { }
-};
-
-template <typename Any>
-struct VehicleImpl : VehicleBase {
-  VehicleImpl(Any vehicle)
-    : vehicle_(vehicle)
-  { }
-
-  std::unique_ptr<VehicleBase> clone() const override
-  { return new VehicleImpl(vehicle_); }
-
-  void accelerate_impl() override
-  { vehicle_.accelerate(); }
-
-  Any vehicle_;
-};
-```
+<pre><code data-sample='code/naive-type-erasure.cpp#VehicleBase'></code></pre>
 
 ----
 
