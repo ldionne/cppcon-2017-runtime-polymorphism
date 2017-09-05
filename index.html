@@ -358,7 +358,7 @@ TODO: The following two slides are way too dense
 
 ### Just like inheritance under the hood
 
-![Naive type erasure](img/naive-type-erasure.png)
+![Naive type erasure](img/naive.png)
 
 ----
 
@@ -367,7 +367,55 @@ TODO: The following two slides are way too dense
 
 ====================
 
-TODO: We can now talk about policies
+### Decoupling storage and method dispatching
+
+![Naive type erasure with a fat pointer](img/naive-split-ptr.png)
+
+TODO:
+- Show how it's implemented
+- Explain how it allows us to explore different storage and dispatching strategies
+
+====================
+
+### The _small buffer optimization_ (SBO)
+
+![Type erasure with SBO](img/sbo-split-ptr.png)
+
+TODO:
+- Show how it's implemented
+- Talk about strengths and weaknesses
+
+----
+
+### Alternative implementation 1
+
+![Type erasure with SBO, alternative implementation 1](img/sbo-split-ptr-alternative1.png)
+
+----
+
+### Alternative implementation 2
+
+![Type erasure with SBO, alternative implementation 2](img/sbo-split-ptr-alternative2.png)
+
+====================
+
+### Always-local storage
+
+![Type erasure with local storage](img/local-split-ptr.png)
+
+TODO:
+- Show how it's implemented
+- Talk about strenghts and weaknesses
+
+====================
+
+### Non-owning storage
+
+![Type erasure with non-owning storage](img/ref-split-ptr.png)
+
+TODO:
+- Show how it's implemented
+- Show how it can be used (e.g. `function_ref`)
 
 ==============================================================================
 

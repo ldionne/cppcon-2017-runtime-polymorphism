@@ -11,3 +11,6 @@ target_compile_features(naive-split-ptr PRIVATE cxx_std_14)
 
 add_executable(sbo-split-ptr code/sbo-split-ptr.cpp)
 target_compile_features(sbo-split-ptr PRIVATE cxx_std_14)
+
+add_executable(local-split-ptr code/local-split-ptr.cpp)
+target_compile_features(local-split-ptr PRIVATE cxx_std_14)
