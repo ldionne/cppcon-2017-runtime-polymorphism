@@ -1,24 +1,13 @@
 // Copyright Louis Dionne 2017
 // Distributed under the Boost Software License, Version 1.0.
 
+#include "vtable.hpp"
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
 
-
-struct vtable {
-  void (*accelerate)(void* __this);
-  void (*copy)(void* p, void const* other);
-  void (*dtor)(void* __this);
-};
-
-template <typename T>
-vtable const vtable_for = {
-  /* accelerate */ [](void* self) { static_cast<T*>(self)->accelerate(); },
-  /* copy */       [](void* p, void const* other) { new (p) T(*static_cast<T const*>(other)); },
-  /* ~T */         [](void* self) { static_cast<T*>(self)->~T(); }
-};
 
 struct Vehicle {
   template <typename Any>

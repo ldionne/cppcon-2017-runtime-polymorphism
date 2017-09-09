@@ -290,11 +290,13 @@ int main() {
 ### Sean Parent explains it better
 https://youtu.be/QGcVXgEVMJg
 
+<!-- TODO: Insert slide with some background information -->
+
 ====================
 
 ### Let's look under the hood
 
-![Classic inheritance](img/classic-inheritance.png)
+![Classic inheritance](img/inheritance.png)
 
 ====================
 
@@ -340,25 +342,25 @@ Vehicle getVehicle(std::istream& user) {
 
 ### Storing related types in a container
 
-<pre><code data-sample='code/naive.cpp#main'></code></pre>
+<pre><code data-sample='code/sean.cpp#main'></code></pre>
 
 ====================
 
 ### How might that work?
 
-<pre><code data-sample='code/naive.cpp#Vehicle'></code></pre>
+<pre><code data-sample='code/sean.cpp#Vehicle'></code></pre>
 
 <!-- TODO: The following two slides are way too dense -->
 
 ----
 
-<pre><code data-sample='code/naive.cpp#VehicleBase'></code></pre>
+<pre><code data-sample='code/sean.cpp#VehicleBase'></code></pre>
 
 ----
 
 ### Just like inheritance under the hood
 
-![Naive type erasure](img/naive.png)
+![Naive type erasure](img/sean.png)
 
 ----
 
@@ -369,7 +371,7 @@ Vehicle getVehicle(std::istream& user) {
 
 ### Decoupling storage and method dispatching
 
-![Naive type erasure with a fat pointer](img/naive-split-ptr.png)
+![Naive type erasure with a fat pointer](img/heap_storage.png)
 
 <!-- TODO: Explain how it allows us to explore different storage and dispatching strategies -->
 
@@ -377,19 +379,19 @@ Vehicle getVehicle(std::istream& user) {
 
 ### How that's implemented
 
-<pre><code data-sample='code/naive-split-ptr.cpp#Vehicle'></code></pre>
+<pre><code data-sample='code/heap_storage.cpp#Vehicle'></code></pre>
 
 ----
 
 ### The vtable
 
-<pre><code data-sample='code/naive-split-ptr.cpp#vtable'></code></pre>
+<pre><code data-sample='code/vtable.hpp#vtable'></code></pre>
 
 ====================
 
 ### The _small buffer optimization_ (SBO)
 
-![Type erasure with SBO](img/sbo-split-ptr.png)
+![Type erasure with SBO](img/sbo_storage.png)
 
 <!-- TODO: Talk about strengths and weaknesses -->
 
@@ -397,59 +399,59 @@ Vehicle getVehicle(std::istream& user) {
 
 ### How that's implemented
 
-<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::members'></code></pre>
+<pre><code data-sample='code/sbo_storage.cpp#Vehicle::members'></code></pre>
 
 ----
 
 ### Construction
 
-<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::Vehicle'></code></pre>
+<pre><code data-sample='code/sbo_storage.cpp#Vehicle::Vehicle'></code></pre>
 
 ----
 
 ### Destruction
 
-<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::~Vehicle'></code></pre>
+<pre><code data-sample='code/sbo_storage.cpp#Vehicle::~Vehicle'></code></pre>
 
 ----
 
 ### Method dispatching
 
-<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::accelerate'></code></pre>
+<pre><code data-sample='code/sbo_storage.cpp#Vehicle::accelerate'></code></pre>
 
 ----
 
 ### The vtable (nothing changed)
 
-<pre><code data-sample='code/naive-split-ptr.cpp#vtable'></code></pre>
+<pre><code data-sample='code/vtable.hpp#vtable'></code></pre>
 
 ----
 
 ### Alternative implementation 1
 
-![Type erasure with SBO, alternative implementation 1](img/sbo-split-ptr-alternative1.png)
+![Type erasure with SBO, alternative implementation 1](img/sbo_storage-alternative1.png)
 
 ----
 
 ### Alternative implementation 2
 
-![Type erasure with SBO, alternative implementation 2](img/sbo-split-ptr-alternative2.png)
+![Type erasure with SBO, alternative implementation 2](img/sbo_storage-alternative2.png)
 
 ====================
 
 ### Simple generalization
 
-![Type erasure with SBO and parameterized buffer size](img/sbo-split-ptr-generalized.png)
+![Type erasure with SBO and parameterized buffer size](img/sbo_storage-generalized.png)
 
 ----
 
 ### Easy to implement
 
-<pre><code data-sample='code/sbo-split-ptr-generalized.cpp#Vehicle::members'></code></pre>
+<pre><code data-sample='code/sbo_storage-generalized.cpp#Vehicle::members'></code></pre>
 
 ----
 
-<pre><code data-sample='code/sbo-split-ptr-generalized.cpp#Vehicle::Vehicle'></code></pre>
+<pre><code data-sample='code/sbo_storage-generalized.cpp#Vehicle::Vehicle'></code></pre>
 
 ----
 
@@ -459,7 +461,7 @@ Vehicle getVehicle(std::istream& user) {
 
 ### Always-local storage
 
-![Type erasure with local storage](img/local-split-ptr.png)
+![Type erasure with local storage](img/local_storage.png)
 
 <!--
 TODO:
@@ -471,7 +473,7 @@ TODO:
 
 ### Non-owning storage
 
-![Type erasure with non-owning storage](img/ref-split-ptr.png)
+![Type erasure with non-owning storage](img/non_owning_storage.png)
 
 <!--
 TODO:
@@ -483,7 +485,7 @@ TODO:
 
 ### Shared remote storage
 
-![Type erasure with shared remote storage](img/shared-split-ptr.png)
+![Type erasure with shared remote storage](img/shared_storage.png)
 
 <!--
 TODO:

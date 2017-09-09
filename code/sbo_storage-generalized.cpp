@@ -1,38 +1,15 @@
 // Copyright Louis Dionne 2017
 // Distributed under the Boost Software License, Version 1.0.
 
+#include "vtable.hpp"
+
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
-
-struct vtable {
-  void (*accelerate)(void* __this);
-  void (*dtor)(void* __this);
-  void (*copy)(void* p, void const* other);
-  std::size_t sizeof_;
-};
-
-template <typename T>
-vtable const vtable_for = {
-  // accelerate()
-  [](void* this_) {
-    static_cast<T*>(this_)->accelerate();
-  },
-
-  // destructor
-  [](void* this_) {
-    static_cast<T*>(this_)->~T();
-  }
-  ,
-  // copy constructor
-  [](void* p, void const* other) {
-    new (p) T(*static_cast<T const*>(other));
-  },
-  sizeof(T)
-};
 
 // sample(Vehicle::members)
 template <std::size_t N>
