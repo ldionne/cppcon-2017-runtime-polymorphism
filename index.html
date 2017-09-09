@@ -365,15 +365,21 @@ Vehicle getVehicle(std::istream& user) {
 ----
 
 ### But we're decoupled from inheritance
-#### Let's have some fun
+#### Now we can have some fun
+
+==============================================================================
+
+### Goal:
+#### Independent storage and method dispatch
+
+- Storage _policy_
+- VTable _policy_
 
 ====================
 
-### Decoupling storage and method dispatching
+### Remote storage
 
 ![Naive type erasure with a fat pointer](img/heap_storage.png)
-
-<!-- TODO: Explain how it allows us to explore different storage and dispatching strategies -->
 
 ----
 
@@ -574,13 +580,6 @@ Vehicle getVehicle(std::istream& user) {
 <pre><code data-sample='code/joined_vtable.cpp#Vehicle'></code></pre>
 
 <!-- TODO: That's not a great title for this slide -->
-
-==============================================================================
-
-### Policy-based approach
-
-- Storage policy
-- VTable policy
 
 ==============================================================================
 
