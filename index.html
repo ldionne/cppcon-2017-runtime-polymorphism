@@ -525,23 +525,55 @@ Vehicle getVehicle(std::istream& user) {
 
 ### What about vtables?
 
+----
+
+### Normally, it is remote
+
+![Traditional fully remote vtable](img/remote_vtable.png)
+
+----
+
+### Turns out we have some choices
+
 ====================
 
 ### Inlining the vtable in the object
 
-![vtable inlined in the type erased wrapper](img/vtable-fully-inlined.png)
+![Fully inlined vtable](img/local_vtable.png)
 
-<!--
-TODO:
-- Show how this is implemented
-- Discuss when this might and might not be useful
--->
+<!-- TODO: Discuss when this might and might not be useful -->
+
+----
+
+### How that's implemented
+
+<pre><code data-sample='code/local_vtable.cpp#Vehicle'></code></pre>
 
 ====================
 
 ### Partial vtable inlining
 
-![vtable partially inlined in the type erased wrapper](img/vtable-partially-inlined.png)
+![Partially inlined vtable](img/joined_vtable.png)
+
+----
+
+### The Vtable &mdash; remote part
+
+<pre><code data-sample='code/joined_vtable.cpp#vtable'></code></pre>
+
+----
+
+### The Vtable &mdash; local part
+
+<pre><code data-sample='code/joined_vtable.cpp#joined_vtable'></code></pre>
+
+----
+
+### The wrapper
+
+<pre><code data-sample='code/joined_vtable.cpp#Vehicle'></code></pre>
+
+<!-- TODO: That's not a great title for this slide -->
 
 ==============================================================================
 
