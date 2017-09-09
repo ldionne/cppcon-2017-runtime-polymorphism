@@ -1,43 +1,56 @@
 // Copyright Louis Dionne 2017
 // Distributed under the Boost Software License, Version 1.0.
 
+#include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
 
 
+// sample(vtable)
 struct vtable {
-  void (*accelerate)(void* __this);
-  void (*copy)(void* p, void const* other);
-  void (*dtor)(void* __this);
-  std::size_t sizeof_;
+  void (*accelerate)(void* this_);
+  void (*dtor)(void* this_);
+  void (*copy)(void* p, void const* other); // skip-sample
+  std::size_t sizeof_;                      // skip-sample
 };
 
 template <typename T>
 vtable const vtable_for = {
-  /* accelerate */ [](void* self) { static_cast<T*>(self)->accelerate(); },
-  /* copy */       [](void* p, void const* other) { new (p) T(*static_cast<T const*>(other)); },
-  /* ~T */         [](void* self) { static_cast<T*>(self)->~T(); },
-  /* sizeof_ */    sizeof(T)
-};
+  // accelerate()
+  [](void* this_) {
+    static_cast<T*>(this_)->accelerate();
+  },
 
+  // destructor
+  [](void* this_) {
+    static_cast<T*>(this_)->~T();
+  }
+  ,                                           // skip-sample
+  // copy-constructor                         // skip-sample
+  [](void* p, void const* other) {            // skip-sample
+    new (p) T(*static_cast<T const*>(other)); // skip-sample
+  },                                          // skip-sample
+  sizeof(T)                                   // skip-sample
+};
+// end-sample
+
+// sample(Vehicle)
 struct Vehicle {
   template <typename Any>
     // enabled only when vehicle.accelerate() is valid
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
     , impl_{std::malloc(sizeof(Any))}
-  {
-    new (impl_) Any{vehicle};
-  }
-
-  Vehicle(Vehicle const& other)
-    : vptr_{other.vptr_}
-    , impl_{std::malloc(other.vptr_->sizeof_)}
-  {
-    other.vptr_->copy(impl_, other.impl_);
-  }
+  { new (impl_) Any{vehicle}; }
+                                                      // skip-sample
+  Vehicle(Vehicle const& other)                       // skip-sample
+    : vptr_{other.vptr_}                              // skip-sample
+    , impl_{std::malloc(other.vptr_->sizeof_)}        // skip-sample
+  {                                                   // skip-sample
+    other.vptr_->copy(impl_, other.impl_);            // skip-sample
+  }                                                   // skip-sample
 
   void accelerate()
   { vptr_->accelerate(impl_); }
@@ -51,7 +64,7 @@ private:
   vtable const* vptr_;
   void* impl_;
 };
-
+// end-sample
 
 
 //////////////////////////////////////////////////////////////////////////////

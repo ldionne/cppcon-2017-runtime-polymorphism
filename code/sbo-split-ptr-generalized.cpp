@@ -11,8 +11,8 @@
 struct vtable {
   void (*accelerate)(void* __this);
   void (*dtor)(void* __this);
-  void (*copy)(void* p, void const* other); // skip-sample
-  std::size_t sizeof_;                      // skip-sample
+  void (*copy)(void* p, void const* other);
+  std::size_t sizeof_;
 };
 
 template <typename T>
@@ -26,21 +26,22 @@ vtable const vtable_for = {
   [](void* this_) {
     static_cast<T*>(this_)->~T();
   }
-  ,                                           // skip-sample
-  // copy constructor                         // skip-sample
-  [](void* p, void const* other) {            // skip-sample
-    new (p) T(*static_cast<T const*>(other)); // skip-sample
-  },                                          // skip-sample
-  sizeof(T)                                   // skip-sample
+  ,
+  // copy constructor
+  [](void* p, void const* other) {
+    new (p) T(*static_cast<T const*>(other));
+  },
+  sizeof(T)
 };
 
 // sample(Vehicle::members)
+template <std::size_t N>
 struct Vehicle {
 private:
   vtable const* vptr_;
   union {
     void* ptr_;
-    std::aligned_storage_t<16> buffer_;
+    std::aligned_storage_t<N> buffer_;
   };
   bool on_heap_;
 // end-sample
@@ -52,7 +53,7 @@ public:
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
   {
-    if (sizeof(Any) > 16) {
+    if (sizeof(Any) > N) {
       on_heap_ = true;
       ptr_ = std::malloc(sizeof(Any));
       new (ptr_) Any{vehicle};
@@ -74,13 +75,10 @@ public:
     }
   }
 
-// sample(Vehicle::accelerate)
   void accelerate() {
     vptr_->accelerate(on_heap_ ? ptr_ : &buffer_);
   }
-// end-sample
 
-// sample(Vehicle::~Vehicle)
   ~Vehicle() {
     if (on_heap_) {
       vptr_->dtor(ptr_);
@@ -89,7 +87,6 @@ public:
       vptr_->dtor(&buffer_);
     }
   }
-// end-sample
 };
 
 
@@ -115,7 +112,7 @@ struct Plane {
 
 // sample(main)
 int main() {
-  std::vector<Vehicle> vehicles;
+  std::vector<Vehicle<16>> vehicles;
 
   vehicles.push_back(Car{"Audi", 2017});
   vehicles.push_back(Truck{"Chevrolet", 2015});

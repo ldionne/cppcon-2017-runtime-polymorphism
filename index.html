@@ -87,7 +87,7 @@ int main() {
 
 ### But sometimes, they're not enough
 
-TODO: find place where they're not enough
+<!-- TODO: find place where they're not enough -->
 
 ====================
 
@@ -348,7 +348,7 @@ Vehicle getVehicle(std::istream& user) {
 
 <pre><code data-sample='code/naive.cpp#Vehicle'></code></pre>
 
-TODO: The following two slides are way too dense
+<!-- TODO: The following two slides are way too dense -->
 
 ----
 
@@ -371,9 +371,19 @@ TODO: The following two slides are way too dense
 
 ![Naive type erasure with a fat pointer](img/naive-split-ptr.png)
 
-TODO:
-- Show how it's implemented
-- Explain how it allows us to explore different storage and dispatching strategies
+<!-- TODO: Explain how it allows us to explore different storage and dispatching strategies -->
+
+----
+
+### How that's implemented
+
+<pre><code data-sample='code/naive-split-ptr.cpp#Vehicle'></code></pre>
+
+----
+
+### The vtable
+
+<pre><code data-sample='code/naive-split-ptr.cpp#vtable'></code></pre>
 
 ====================
 
@@ -381,9 +391,37 @@ TODO:
 
 ![Type erasure with SBO](img/sbo-split-ptr.png)
 
-TODO:
-- Show how it's implemented
-- Talk about strengths and weaknesses
+<!-- TODO: Talk about strengths and weaknesses -->
+
+----
+
+### How that's implemented
+
+<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::members'></code></pre>
+
+----
+
+### Construction
+
+<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::Vehicle'></code></pre>
+
+----
+
+### Destruction
+
+<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::~Vehicle'></code></pre>
+
+----
+
+### Method dispatching
+
+<pre><code data-sample='code/sbo-split-ptr.cpp#Vehicle::accelerate'></code></pre>
+
+----
+
+### The vtable (nothing changed)
+
+<pre><code data-sample='code/naive-split-ptr.cpp#vtable'></code></pre>
 
 ----
 
@@ -399,13 +437,35 @@ TODO:
 
 ====================
 
+### Simple generalization
+
+![Type erasure with SBO and parameterized buffer size](img/sbo-split-ptr-generalized.png)
+
+----
+
+### Easy to implement
+
+<pre><code data-sample='code/sbo-split-ptr-generalized.cpp#Vehicle::members'></code></pre>
+
+----
+
+<pre><code data-sample='code/sbo-split-ptr-generalized.cpp#Vehicle::Vehicle'></code></pre>
+
+----
+
+### Everything else is the same
+
+====================
+
 ### Always-local storage
 
 ![Type erasure with local storage](img/local-split-ptr.png)
 
+<!--
 TODO:
 - Show how it's implemented
 - Talk about strenghts and weaknesses
+-->
 
 ====================
 
@@ -413,9 +473,11 @@ TODO:
 
 ![Type erasure with non-owning storage](img/ref-split-ptr.png)
 
+<!--
 TODO:
 - Show how it's implemented
 - Show how it can be used (e.g. `function_ref`)
+-->
 
 ====================
 
@@ -423,9 +485,11 @@ TODO:
 
 ![Type erasure with shared remote storage](img/shared-split-ptr.png)
 
+<!--
 TODO:
 - Show how it's implemented
 - Show some use cases (e.g. Sean Parent's `document`)
+-->
 
 ==============================================================================
 
@@ -437,9 +501,11 @@ TODO:
 
 ![vtable inlined in the type erased wrapper](img/vtable-fully-inlined.png)
 
+<!--
 TODO:
 - Show how this is implemented
 - Discuss when this might and might not be useful
+-->
 
 ====================
 
@@ -449,9 +515,16 @@ TODO:
 
 ==============================================================================
 
+### Policy-based approach
+
+- Storage policy
+- VTable policy
+
+==============================================================================
+
 ### A few examples using Dyno
 
-TODO: Show the gist of how these ideas work in Dyno
+<!-- TODO: Show the gist of how these ideas work in Dyno -->
 
 ====================
 

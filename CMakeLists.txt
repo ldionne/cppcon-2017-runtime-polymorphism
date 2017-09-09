@@ -3,14 +3,13 @@
 
 cmake_minimum_required(VERSION 3.8)
 
-add_executable(naive code/naive.cpp)
-target_compile_features(naive PRIVATE cxx_std_14)
+enable_testing()
 
-add_executable(naive-split-ptr code/naive-split-ptr.cpp)
-target_compile_features(naive-split-ptr PRIVATE cxx_std_14)
+file(GLOB examples RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/code" "code/*.cpp")
+foreach(example IN LISTS examples)
+  string(REGEX REPLACE "\\.cpp" "" example "${example}")
+  add_executable(${example} code/${example}.cpp)
+  target_compile_features(${example} PRIVATE cxx_std_14)
 
-add_executable(sbo-split-ptr code/sbo-split-ptr.cpp)
-target_compile_features(sbo-split-ptr PRIVATE cxx_std_14)
-
-add_executable(local-split-ptr code/local-split-ptr.cpp)
-target_compile_features(local-split-ptr PRIVATE cxx_std_14)
+  add_test(${example} ${example})
+endforeach()
