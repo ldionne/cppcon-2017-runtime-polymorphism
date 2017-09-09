@@ -147,37 +147,50 @@ std::tuple<Car, Truck, Plane> vehicles{
 
 ### C++ has a solution for that!
 
+====
+
+### Inheritance
+
+<pre><code data-sample="code/inheritance.cpp#Vehicle"></code></pre>
+
 ----
 
-<br><br><br>
-### It's called inheritance
-<br><br><br> <!-- push the div to the bottom (yes, I'm that bad with CSS) -->
+### Usage
 
-<small class="fragment fade-in" style="position:absolute; bottom:0;">and it sucks</small>
+<pre><code data-sample="code/inheritance.cpp#main"></code></pre>
+
+----
+
+### Under the hood
+
+![Implementation of inheritance](img/inheritance.png)
+
+----
+
+### Vtables from scratch
+
+<pre><code data-sample="code/inheritance-manual.cpp#vtable"></code></pre>
+
+<pre><code data-sample="code/inheritance-manual.cpp#Vehicle"></code></pre>
+
+----
+
+<pre><code data-sample="code/inheritance-manual.cpp#subclasses"></code></pre>
+
+----
+
+<pre><code data-sample="code/inheritance-manual.cpp#main"></code></pre>
 
 ====================
 
-### Let's revisit our use cases
+### Aside
+#### Inheritance has many problems
 
-====================
+----
 
-### We now have
+### Bakes in reference semantics
 
 ```c++
-struct Vehicle { virtual void accelerate(); };
-
-struct Car   : Vehicle { void accelerate() override; };
-struct Truck : Vehicle { void accelerate() override; };
-struct Plane : Vehicle { void accelerate() override; };
-```
-
-====================
-
-### Passing related types to a function
-
-```c++
-// Should work on anything with an accelerate() method
-// Works with anything that inherits from Vehicle, we're close
 void foo(Vehicle& vehicle) {
   ...
   vehicle.accelerate();
@@ -185,11 +198,9 @@ void foo(Vehicle& vehicle) {
 }
 ```
 
-- reference semantics now baked in
-
 ----
 
-### Don't even try this
+### Slicing
 
 ```c++
 void foo(Vehicle vehicle) {
@@ -199,11 +210,9 @@ void foo(Vehicle vehicle) {
 }
 ```
 
-Note: Passing a derived type will slice it
+----
 
-====================
-
-### Returning related types from a function
+### Heap allocations
 
 ```c++
 std::unique_ptr<Vehicle> getVehicle(std::istream& user) {
@@ -216,133 +225,104 @@ std::unique_ptr<Vehicle> getVehicle(std::istream& user) {
 }
 ```
 
-- we're making an allocation
-- nullable semantics now baked in (pointer)
-- we have a bug
-
 ----
 
-### Virtual destructors, someone?
+### Bakes in nullable semantics
 
 ```c++
-struct Vehicle {
-  virtual void accelerate();
-  virtual ~Vehicle() { }
-//^^^^^^^
-};
+std::unique_ptr<Vehicle> vehicle = getVehicle(std::cin);
+// can vehicle be null?
 ```
 
 ----
 
-### Also, I was being nice
-#### I see the following more often
+### Ownership hell
 
 ```c++
-Vehicle* getVehicle(std::istream& user) {
-  std::string choice;
-  user >> choice;
-  if      (choice == "car")   return new Car{...};
-  else if (choice == "truck") return new Truck{...};
-  else if (choice == "plane") return new Plane{...};
-  else                        die();
-}
+Vehicle*                 getVehicle(std::istream& user);
+std::unique_ptr<Vehicle> getVehicle(std::istream& user);
+std::shared_ptr<Vehicle> getVehicle(std::istream& user);
 ```
 
-- now we're in memory management hell
+----
 
-====================
-
-### Storing related types in a container
+### No value semantics
 
 ```c++
-int main() {
-  // Should store anything that has an accelerate() method
-  // Works with anything derived from Vehicle, we're close
-  std::vector<std::unique_ptr<Vehicle>> vehicles;
+std::vector<std::unique_ptr<Vehicle>> vehicles;
+vehicles.push_back(std::make_unique<Car>(...));
+vehicles.push_back(std::make_unique<Truck>(...));
+vehicles.push_back(std::make_unique<Plane>(...));
 
-  vehicles.push_back(std::make_unique<Car>(...));
-  vehicles.push_back(std::make_unique<Truck>(...));
-  vehicles.push_back(std::make_unique<Plane>(...));
-
-  for (auto& vehicle : vehicles) {
-    vehicle->accelerate();
-  }
+std::vector<std::unique_ptr<Vehicle>> copy = vehicles;
+for (auto& vehicle : copy) {
+  vehicle->accelerate();
 }
 ```
 
 ----
 
-- can't copy the container anymore (`unique_ptr`)
-  + if you could, it wouldn't do what you expect
-- we're making allocations
-- doesn't work well with standard algorithms
+### Doesn't play well with algorithms
 
-====================
+```c++
+std::vector<std::unique_ptr<Vehicle>> vehicles;
+vehicles.push_back(std::make_unique<Car>(...));
+vehicles.push_back(std::make_unique<Truck>(...));
+vehicles.push_back(std::make_unique<Plane>(...));
 
-<br><br><br>
-### Now, everyone knows what I think about inheritance
-<br><br><br> <!-- push the div to the bottom (yes, I'm that bad with CSS) -->
-
-<small class="fragment fade-in" style="position:absolute; bottom:0;">it sucks</small>
+std::sort(vehicles.begin(), vehicles.end()); // NOT what you wanted!
+```
 
 ----
 
-### Sean Parent explains it better
+### Intrusive
+
+```c++
+namespace lib {
+  struct Motorcycle { void accelerate(); };
+}
+
+void foo(Vehicle& vehicle) {
+  ...
+  vehicle.accelerate();
+  ...
+}
+
+Motorcycle bike;
+foo(bike); // can't work!
+```
+
+----
+
+### Listen to Sean Parent, not me
 https://youtu.be/QGcVXgEVMJg
 
 <!-- TODO: Insert slide with some background information -->
 
 ====================
 
-### Let's look under the hood
-
-![Classic inheritance](img/inheritance.png)
-
-====================
-
-### What we actually wanted
+### I just wanted this!
 
 ```c++
 interface Vehicle { void accelerate(); };
 
+namespace lib {
+  struct Motorcycle { void accelerate(); };
+}
 struct Car   { void accelerate(); };
 struct Truck { void accelerate(); };
-struct Plane { void accelerate(); };
-```
 
-----
+int main() {
+  std::vector<Vehicle> vehicles;
+  vehicles.push_back(Car{...});
+  vehicles.push_back(Truck{...});
+  vehicles.push_back(lib::Motorcycle{...});
 
-### Passing related types to a function
-
-```c++
-// Will work on anything that satisfies the Vehicle interface
-void foo(Vehicle vehicle) {
-  ...
-  vehicle.accelerate();
-  ...
+  for (auto& vehicle : vehicles) {
+    vehicle.accelerate();
+  }
 }
 ```
-
-----
-
-### Returning related types from a function
-
-```c++
-Vehicle getVehicle(std::istream& user) {
-  std::string choice;
-  user >> choice;
-  if      (choice == "car")   return Car{...};
-  else if (choice == "truck") return Truck{...};
-  else if (choice == "plane") return Plane{...};
-  else                        die();
-}
-```
-
-----
-
-### Storing related types in a container
-
-<pre><code data-sample='code/sean.cpp#main'></code></pre>
 
 ====================
 
