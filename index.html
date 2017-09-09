@@ -463,11 +463,29 @@ Vehicle getVehicle(std::istream& user) {
 
 ![Type erasure with local storage](img/local_storage.png)
 
-<!--
-TODO:
-- Show how it's implemented
-- Talk about strenghts and weaknesses
--->
+<!-- TODO: Talk about strenghts and weaknesses -->
+
+----
+
+### Doesn't fit? Doesn't compile!
+
+----
+
+### How that's implemented
+
+<pre><code data-sample='code/local_storage.cpp#Vehicle::Vehicle'></code></pre>
+
+----
+
+### Destruction
+
+<pre><code data-sample='code/local_storage.cpp#Vehicle::~Vehicle'></code></pre>
+
+----
+
+### Method dispatching
+
+<pre><code data-sample='code/local_storage.cpp#Vehicle::accelerate'></code></pre>
 
 ====================
 
@@ -475,11 +493,19 @@ TODO:
 
 ![Type erasure with non-owning storage](img/non_owning_storage.png)
 
-<!--
-TODO:
-- Show how it's implemented
-- Show how it can be used (e.g. `function_ref`)
--->
+<!-- TODO: Show how it can be used (e.g. `function_ref`) -->
+
+----
+
+### How that's implemented
+
+<pre><code data-sample='code/non_owning_storage.cpp#Vehicle'></code></pre>
+
+----
+
+### Usage differs a bit
+
+<pre><code data-sample='code/non_owning_storage.cpp#main'></code></pre>
 
 ====================
 
@@ -487,11 +513,13 @@ TODO:
 
 ![Type erasure with shared remote storage](img/shared_storage.png)
 
-<!--
-TODO:
-- Show how it's implemented
-- Show some use cases (e.g. Sean Parent's `document`)
--->
+<!-- TODO: Show some use cases (e.g. Sean Parent's `document`) -->
+
+----
+
+### How that's implemented
+
+<pre><code data-sample='code/shared_remote_storage.cpp#Vehicle'></code></pre>
 
 ==============================================================================
 

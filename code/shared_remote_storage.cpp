@@ -3,47 +3,31 @@
 
 #include "vtable.hpp"
 
+#include <cstddef>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
 
 
-// sample(Vehicle::Vehicle)
+// sample(Vehicle)
 class Vehicle {
   vtable const* vptr_;
-  std::aligned_storage_t<64> buffer_;
+  std::shared_ptr<void> ptr_;
 
 public:
   template <typename Any>
     // enabled only when vehicle.accelerate() is valid
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
-  {
-    static_assert(sizeof(Any) <= sizeof(buffer_),
-      "can't hold such a large object in a Vehicle");
-    new (&buffer_) Any(vehicle);
-  }
-// end-sample
+    , ptr_{std::make_shared<Any>(vehicle)}
+  { }
 
-  Vehicle(Vehicle const& other)
-    : vptr_{other.vptr_}
-  {
-    other.vptr_->copy(&buffer_, &other.buffer_);
-  }
-
-// sample(Vehicle::accelerate)
   void accelerate() {
-    vptr_->accelerate(&buffer_);
+    vptr_->accelerate(ptr_.get());
   }
-// end-sample
-
-// sample(Vehicle::~Vehicle)
-  ~Vehicle() {
-    vptr_->dtor(&buffer_);
-  }
-// end-sample
 };
+// end-sample
 
 
 
