@@ -442,8 +442,8 @@ int main() {
 <ul>
   <li class="strength">Does not always require allocating</li>
   <li class="weakness">Takes up more space</li>
-  <li class="weakness">Copy/move/swap operations are more complicated</li>
-  <li class="weakness">Dispatching may be more complicated than remote storage</li>
+  <li class="weakness">Copy/move/swap is more complicated</li>
+  <li class="weakness">Dispatching may be more costly</li>
   <li class="weakness">Size of buffer leaks into the ABI</li>
 </ul>
 
@@ -486,6 +486,7 @@ We need to handle cases where the two types are not the same in swap.
   <li class="strength">No allocation &ndash; ever</li>
   <li class="strength">Simple dispatching</li>
   <li class="weakness">Takes up more space</li>
+  <li class="weakness">Size of buffer leaks into ABI</li>
 </ul>
 
 ====================
@@ -516,7 +517,8 @@ local storage (16 bytes)          2 ns        322754665
 
 ----
 
-Accessing many 4 bytes objects (10 x 3 method calls)
+Accessing many 4 bytes objects<br>
+(10 x 3 method calls, SBO with bool)
 ```
                                  Time         Iterations to converge
 remote storage                   46 ns        15344820
@@ -528,7 +530,8 @@ local storage (16 bytes)         47 ns        15127808
 
 ----
 
-Accessing many objects (half 8 bytes, half 16 bytes)
+Accessing many objects<br>
+(half 8 bytes, half 16 bytes, SBO with bool)
 ```
                                  Time         Iterations to converge
 remote storage                   46 ns        14148932
@@ -538,20 +541,72 @@ SBO storage (16 bytes)           57 ns        12648393
 local storage (16 bytes)         46 ns        14811617
 ```
 
+----
+
+Accessing many 4 bytes objects
+<br>(10 x 3 method calls, SBO with pointer)
+```
+                                 Time         Iterations to converge
+remote storage                   47 ns        13849319
+SBO storage (4 bytes)            46 ns        14770924
+SBO storage (8 bytes)            46 ns        15021298
+SBO storage (16 bytes)           46 ns        15104632
+local storage (16 bytes)         47 ns        14765222
+```
+
+----
+
+Accessing many objects<br>
+(half 8 bytes, half 16 bytes, SBO with pointer)
+```
+                                 Time         Iterations to converge
+remote storage                   48 ns        14687893
+SBO storage (4 bytes)            47 ns        14681670
+SBO storage (8 bytes)            47 ns        15141945
+SBO storage (16 bytes)           48 ns        14424959
+local storage (16 bytes)         48 ns        14740225
+```
+
+====================
+
+### Guidelines
+
+- Use local storage whenever you can afford it
+- When space is very important, use remote storage
+- Otherwise, use SBO with the largest size you can afford (depending on your problem)
+
 ====================
 
 ### Non-owning storage
-#### Basically a polymorphic view
+
+----
+
+### Basically a polymorphic view
+
+```c++
+void process(VehicleRef vehicle) {
+  ...
+  vehicle.accelerate();
+  ...
+}
+
+int main() {
+  Truck truck{...};
+  process(truck); // Don't want to copy here!
+}
+```
+
+----
+
+### In pictures
 
 ![Type erasure with non-owning storage](img/non_owning_storage.png)
-
-<!-- TODO: Show how it can be used (e.g. `function_ref`) -->
 
 ----
 
 ### How that's implemented
 
-<pre><code data-sample='code/non_owning_storage.cpp#Vehicle'></code></pre>
+<pre><code data-sample='code/non_owning_storage.cpp#VehicleRef'></code></pre>
 
 ----
 
@@ -638,12 +693,6 @@ local storage (16 bytes)         46 ns        14811617
 https://github.com/ldionne/dyno
 
 ==============================================================================
-
-### Summary: guidelines
-
-<!-- TODO -->
-
-----
 
 ### Useful links and related material
 

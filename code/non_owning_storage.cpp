@@ -9,11 +9,11 @@
 #include <vector>
 
 
-// sample(Vehicle)
-struct Vehicle {
+// sample(VehicleRef)
+struct VehicleRef {
   template <typename Any>
     // enabled only when vehicle.accelerate() is valid
-  Vehicle(Any& vehicle)
+  VehicleRef(Any& vehicle)
     : vptr_{&vtable_for<Any>}
     , ref_{&vehicle}
   { }
@@ -54,12 +54,12 @@ int main() {
   Truck chevrolet{"Chevrolet", 2015};
   Plane boeing{"Boeing", "747"};
 
-  std::vector<Vehicle> vehicles;
+  std::vector<VehicleRef> vehicles;
   vehicles.push_back(audi);
   vehicles.push_back(chevrolet);
   vehicles.push_back(boeing);
 
-  for (auto& vehicle : vehicles) {
+  for (VehicleRef vehicle : vehicles) {
     vehicle.accelerate();
   }
 }
