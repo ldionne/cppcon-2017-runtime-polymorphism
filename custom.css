@@ -27,3 +27,24 @@
 .reveal .controls .navigate-left {
   /*display: none;*/
 }
+
+/* Used to write unordered lists with custom images for good and bad points */
+li.strength {
+  margin: 0;
+  padding: 36px 0 36px 84px;
+  list-style: none;
+  background-image: url("img/green-checkmark.png");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 40px;
+}
+
+li.weakness {
+  margin: 0;
+  padding: 36px 0 36px 84px;
+  list-style: none;
+  background-image: url("img/red-x.png");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 40px;
+}

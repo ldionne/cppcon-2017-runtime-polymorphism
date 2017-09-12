@@ -371,13 +371,21 @@ int main() {
 
 <pre><code data-sample='code/vtable.hpp#vtable'></code></pre>
 
+----
+
+### Strengths and weaknesses
+
+<ul>
+  <li class="strength">Simple model, similar to classic inheritance</li>
+  <li class="strength">May be easier to keep ABI stable, unlike other techniques we will see</li>
+  <li class="weakness">Always requires an allocation</li>
+</ul>
+
 ====================
 
 ### The _small buffer optimization_ (SBO)
 
 ![Type erasure with SBO](img/sbo_storage.png)
-
-<!-- TODO: Talk about strengths and weaknesses -->
 
 ----
 
@@ -421,19 +429,32 @@ int main() {
 
 ![Type erasure with SBO, alternative implementation 2](img/sbo_storage-alternative2.png)
 
-====================
+----
 
 ### Simple generalization
 
 ![Type erasure with SBO and parameterized buffer size](img/sbo_storage-generalized.png)
+
+----
+
+### Strengths and weaknesses
+
+<ul>
+  <li class="strength">Does not always require allocating</li>
+  <li class="weakness">Takes up more space</li>
+  <li class="weakness">Copy/move/swap operations are more complicated</li>
+  <li class="weakness">Dispatching may be more complicated than remote storage</li>
+  <li class="weakness">Size of buffer leaks into the ABI</li>
+</ul>
+
+Note:
+We need to handle cases where the two types are not the same in swap.
 
 ====================
 
 ### Always-local storage
 
 ![Type erasure with local storage](img/local_storage.png)
-
-<!-- TODO: Talk about strenghts and weaknesses -->
 
 ----
 
@@ -457,9 +478,70 @@ int main() {
 
 <pre><code data-sample='code/local_storage.cpp#Vehicle::accelerate'></code></pre>
 
+----
+
+### Strengths and weaknesses
+
+<ul>
+  <li class="strength">No allocation &ndash; ever</li>
+  <li class="strength">Simple dispatching</li>
+  <li class="weakness">Takes up more space</li>
+</ul>
+
+====================
+
+### Some benchmarks
+
+Creating many 4 bytes objects
+```
+                                 Time         Iterations to converge
+remote storage                   54 ns        13264107
+SBO storage (4 bytes)             2 ns        284751940
+SBO storage (8 bytes)             2 ns        292815969
+SBO storage (16 bytes)            2 ns        288159525
+local storage (16 bytes)          2 ns        332593708
+```
+
+----
+
+Creating many 16 bytes objects
+```
+                                 Time         Iterations to converge
+remote storage                   54 ns        13214030
+SBO storage (4 bytes)            54 ns        12794502
+SBO storage (8 bytes)            54 ns        13144553
+SBO storage (16 bytes)            2 ns        287227800
+local storage (16 bytes)          2 ns        322754665
+```
+
+----
+
+Accessing many 4 bytes objects (10 x 3 method calls)
+```
+                                 Time         Iterations to converge
+remote storage                   46 ns        15344820
+SBO storage (4 bytes)            59 ns        12048400
+SBO storage (8 bytes)            59 ns        12067717
+SBO storage (16 bytes)           59 ns        11312400
+local storage (16 bytes)         47 ns        15127808
+```
+
+----
+
+Accessing many objects (half 8 bytes, half 16 bytes)
+```
+                                 Time         Iterations to converge
+remote storage                   46 ns        14148932
+SBO storage (4 bytes)            55 ns        12897995
+SBO storage (8 bytes)            57 ns        11330894
+SBO storage (16 bytes)           57 ns        12648393
+local storage (16 bytes)         46 ns        14811617
+```
+
 ====================
 
 ### Non-owning storage
+#### Basically a polymorphic view
 
 ![Type erasure with non-owning storage](img/non_owning_storage.png)
 
@@ -555,10 +637,17 @@ int main() {
 
 https://github.com/ldionne/dyno
 
+==============================================================================
+
+### Summary: guidelines
+
+<!-- TODO -->
+
 ----
 
-### Related material
+### Useful links and related material
 
+- The Dyno library: https://github.com/ldionne/dyno
 - Sean Parent's talk: https://youtu.be/QGcVXgEVMJg
 - Zach Laine's talk: https://youtu.be/0I0FD3N5cgM
 
