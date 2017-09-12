@@ -598,15 +598,17 @@ int main() {
 
 ### Inlining the vtable in the object
 
-![Fully inlined vtable](img/local_vtable.png)
-
-<!-- TODO: Discuss when this might and might not be useful -->
+<img src="img/local_vtable.png" style="width:600px; height:auto;">
 
 ----
 
 ### How that's implemented
 
 <pre><code data-sample='code/local_vtable.cpp#Vehicle'></code></pre>
+
+----
+
+### Usually a pessimization
 
 ====================
 
@@ -631,6 +633,44 @@ int main() {
 ### The polymorphic wrapper
 
 <pre><code data-sample='code/joined_vtable.cpp#Vehicle'></code></pre>
+
+----
+
+### Some benchmarks
+
+Calling 2 virtual functions (100 x 2 calls)
+```
+                                 Time         Iterations to converge
+everything remote                462 ns       1527340
+1 function local                 438 ns       1384193
+2 functions local                487 ns       1430346
+```
+
+----
+
+### Not very conclusive
+
+----
+
+### Let's look at assembly
+
+<iframe width="1300px" height="500px" src="https://gcc.godbolt.org/e#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAKxAEZSBnVAV2OUxAHIGDjnkCAagBqAFQCGAIwA2mQQFIA7ACF5ABgCCgwQDdUedIIgAqAGa0AlBD0HjF%2BQGZVm7TcMnTAJitu7j51q6%2Bu5mDj7Bfk7qgW5GZgAs4bb2UZpKACL%2B0dEEmAC2AA7S4rkKDgDCBACeBZgAduJ5cqKO2NGYAB65xHUiEjJyaHU8ugRSsllpUxo8fAKCxPmouQD64nVVCirRrsGC5hAWW8q6BbwrALStBwyY0qYrKScZO0EG%2B56Hx6fnVw7YXggt3uj38W0yLjehlMDi%2BShOOjOxEu11hwIeT3Br1ipnicJUP2RfwBePRoKcWMhYnGg1QwwIxkEQxGiPOkxiEUEZPZL1SGmis34QmkqGQ4mkaw2x2xewOR3hoxkKwAdDc7hiwS9ITjPvKCToCErVZ8yZitRz3jD8QjDRLVWj1eTnooIRboXi9TajbigY6zS7XtSBky6SzbSt2btbFzHTyA3zojiIIs8stMJKqvJPAA2QTiT2vcSq2iHSN542lvnaItWp6F1UeuOuxOyiAisUS9aZnN5guQmsluv9itDwI12Gj6sNysBc2cCykaRcACsnFIdS4ajXqC45Szqk8JyYrHYCk8Dloa4Im/nC4A1iBl7RlQBObNqRQADniF4cik8y7LouXDxGuG6cFupA7pwa4MCAaikNeEHzqQcCwEgaCFHgshkBQECYQU2GYMQKDFHUwDLmoCGmNh3RwRAkg3qQmFNHUBAAPJ1NIVRMfgiwCHgOiYHByELqgZx4KGXAXOxDiCBcPDoI46TIPu%2B60KBjAsGwHCWMBnCruuTHQR0n7Zhc2bxEyZHAIIy7KmoDlGLghAkGeF6kII5SoFhOHuZYV43hY94gPEn4OQ4L6eLQy7ZmZniKPET76Zp4GQdBsHwYhQULkunCeGBxlcIFokLkJxAMJJG7xEAA%3D"></iframe>
+
+Note:
+Chandler told me:
+With the remote vtable, the vptr has to be reloaded every time because it
+could have changed during the virtual call. When the function pointers are
+in the object, the compiler can see they don't change.
+
+----
+
+### The idea
+
+- By default, all methods are in the remote vtable
+- Consider inlining some methods if
+  - you have slack space
+  - you know you're calling them often
+  - you've measured it makes a difference
 
 ==============================================================================
 
