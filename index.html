@@ -75,25 +75,15 @@ int main() {
 
 ----
 
-### Tuples sometimes do the trick
+### `variant` sometimes does the trick
 
-```c++
-std::tuple<Car, Truck, Plane> vehicles{
-  Car{...},
-  Truck{...},
-  Plane{...}
-};
-```
-
-- But size is fixed, can't add more objects
-- Order is also fixed, can't reorder elements
+- But it only works for closed set of types
+- Using visitation is sometimes (often?) not convenient
 
 ----
 
 ### Bottom line:
-#### Manipulating related types with different representations
-
-<!-- TODO: Briefly explain how variant is different. -->
+#### Manipulating an open set of related types with different representations
 
 ====================
 
