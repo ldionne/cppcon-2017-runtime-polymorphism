@@ -39,57 +39,7 @@
 
 ### What is runtime polymorphism <br> and when do you need it?
 
-====================
-
-### Assume the following
-
-```c++
-struct Car   { void accelerate(); };
-struct Truck { void accelerate(); };
-struct Plane { void accelerate(); };
-```
-
-====================
-
-### Passing related types to a function
-
-```c++
-// Should work on anything with an accelerate() method
-void foo(??? vehicle) {
-  ...
-  vehicle.accelerate();
-  ...
-}
-```
-
 ----
-
-### Templates often do the trick
-
-```c++
-template <typename Vehicle>
-void foo(Vehicle vehicle) {
-  ...
-  vehicle.accelerate();
-  ...
-}
-
-int main() {
-  Car car{...};
-  Truck truck{...};
-
-  foo(car);
-  foo(truck);
-}
-```
-
-----
-
-### But sometimes, they're not enough
-
-<!-- TODO: find place where they're not enough -->
-
-====================
 
 ### Returning related types from a function
 
@@ -104,7 +54,7 @@ int main() {
 }
 ```
 
-====================
+----
 
 ### Storing related types in a container
 
@@ -138,16 +88,18 @@ std::tuple<Car, Truck, Plane> vehicles{
 - But size is fixed, can't add more objects
 - Order is also fixed, can't reorder elements
 
-====================
+----
 
 ### Bottom line:
 #### Manipulating related types with different representations
+
+<!-- TODO: Briefly explain how variant is different. -->
 
 ====================
 
 ### C++ has a solution for that!
 
-====
+----
 
 ### Inheritance
 
@@ -322,7 +274,7 @@ int main() {
 }
 ```
 
-====================
+----
 
 ### How might that work?
 
