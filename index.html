@@ -690,19 +690,10 @@ int main() {
 
 ### Summary
 
+- Inheritance model is just one option amongst others
 - Many ways of storing polymorphic objects
-  + On the heap
-  + Small Buffer Optimization (SBO)
-  + Pre-allocated buffer (_local_ storage)
-  + Shared heap storage
-  + Polymorphic references
-  + ... (I don't know them all)
-
-----
-
-### Summary
-
-- Generating own vtable provides fine-grained control
+  + As always, space/time tradeoff
+- Vtables can be inlined (measure!)
 - Type erasure is tedious to do manually
 
 ====
