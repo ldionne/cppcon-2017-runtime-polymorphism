@@ -315,6 +315,12 @@ int main() {
 
 ----
 
+### With Dyno
+
+<pre><code data-sample='code/remote_storage.dyno.cpp#vehicle'></code></pre>
+
+----
+
 ### Strengths and weaknesses
 
 <ul>
@@ -379,6 +385,12 @@ int main() {
 
 ----
 
+### With Dyno
+
+<pre><code data-sample='code/sbo_storage.dyno.cpp#vehicle'></code></pre>
+
+----
+
 ### Strengths and weaknesses
 
 <ul>
@@ -419,6 +431,12 @@ We need to handle cases where the two types are not the same in swap.
 ### Method dispatching
 
 <pre><code data-sample='code/local_storage.cpp#Vehicle::accelerate'></code></pre>
+
+----
+
+### With Dyno
+
+<pre><code data-sample='code/local_storage.dyno.cpp#vehicle'></code></pre>
 
 ----
 
@@ -598,6 +616,12 @@ int main() {
 
 ----
 
+### With Dyno
+
+<!-- TODO -->
+
+----
+
 ### Usually a pessimization
 
 ====================
@@ -623,6 +647,12 @@ int main() {
 ### The polymorphic wrapper
 
 <pre><code data-sample='code/joined_vtable.cpp#Vehicle'></code></pre>
+
+----
+
+### With Dyno
+
+<!-- TODO -->
 
 ----
 
@@ -663,12 +693,6 @@ in the object, the compiler can see they don't change.
   - you've measured it makes a difference
 
 ==============================================================================
-
-### A few examples using Dyno
-
-<!-- TODO: Show the gist of how these ideas work in Dyno -->
-
-====================
 
 ### The Dyno library is available
 
