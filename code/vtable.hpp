@@ -17,17 +17,14 @@ struct vtable {
 
 template <typename T>
 vtable const vtable_for = {
-  // accelerate()
   [](void* this_) {
     static_cast<T*>(this_)->accelerate();
   },
 
-  // destructor
   [](void* this_) {
     static_cast<T*>(this_)->~T();
   }
   ,                                           // skip-sample
-  // copy-constructor                         // skip-sample
   [](void* p, void const* other) {            // skip-sample
     new (p) T(*static_cast<T const*>(other)); // skip-sample
   },                                          // skip-sample
