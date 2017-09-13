@@ -8,14 +8,17 @@
 using namespace dyno::literals;
 
 
-struct Vehicle : decltype(dyno::requires(
+// sample(IVehicle)
+struct IVehicle : decltype(dyno::requires(
   dyno::CopyConstructible{},
+  dyno::Destructible{},
   "accelerate"_s = dyno::function<void(dyno::T&)>
 )) { };
 
 template <typename T>
-auto const dyno::default_concept_map<Vehicle, T> = dyno::make_concept_map(
+auto dyno::default_concept_map<IVehicle, T> = dyno::make_concept_map(
   "accelerate"_s = [](T& vehicle) { vehicle.accelerate(); }
 );
+// end-sample
 
 #endif // header guard

@@ -21,8 +21,8 @@ struct VehicleRef {
   { poly_.virtual_("accelerate"_s)(poly_); }
 
 private:
-  dyno::poly<Vehicle, dyno::non_owning_storage> poly_;
-  //                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  dyno::poly<IVehicle, dyno::non_owning_storage> poly_;
+  //                   ^^^^^^^^^^^^^^^^^^^^^^^^
 };
 // end-sample
 

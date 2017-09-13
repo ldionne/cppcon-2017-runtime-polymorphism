@@ -11,17 +11,17 @@
 using namespace dyno::literals;
 
 
-// sample(vehicle)
-struct vehicle {
+// sample(Vehicle)
+struct Vehicle {
   template <typename Any>
-  vehicle(Any v) : poly_{v} { }
+  Vehicle(Any vehicle) : poly_{vehicle} { }
 
   void accelerate()
   { poly_.virtual_("accelerate"_s)(poly_); }
 
 private:
-  dyno::poly<Vehicle, dyno::sbo_storage<16>> poly_;
-  //                  ^^^^^^^^^^^^^^^^^^^^^
+  dyno::poly<IVehicle, dyno::sbo_storage<16>> poly_;
+  //                   ^^^^^^^^^^^^^^^^^^^^^
 };
 // end-sample
 
@@ -47,7 +47,7 @@ struct Plane {
 
 // sample(main)
 int main() {
-  std::vector<vehicle> vehicles;
+  std::vector<Vehicle> vehicles;
 
   vehicles.push_back(Car{"Audi", 2017});
   vehicles.push_back(Truck{"Chevrolet", 2015});
