@@ -10,21 +10,19 @@
 
 
 // sample(VehicleRef)
-struct VehicleRef {
+class VehicleRef {
+  vtable const* const vptr_;
+  void* ref_;
+
+public:
   template <typename Any>
-    // enabled only when vehicle.accelerate() is valid
   VehicleRef(Any& vehicle)
     : vptr_{&vtable_for<Any>}
     , ref_{&vehicle}
   { }
 
-  void accelerate() {
-    vptr_->accelerate(ref_);
-  }
-
-private:
-  vtable const* const vptr_;
-  void* ref_;
+  void accelerate()
+  { vptr_->accelerate(ref_); }
 };
 // end-sample
 

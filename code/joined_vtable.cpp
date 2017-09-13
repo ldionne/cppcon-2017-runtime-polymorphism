@@ -46,7 +46,11 @@ joined_vtable const joined_vtable_for = {
 // end-sample
 
 // sample(Vehicle)
-struct Vehicle {
+class Vehicle {
+  joined_vtable const vtbl_;
+  void* ptr_;
+
+public:
   template <typename Any>
   Vehicle(Any vehicle)
     : vtbl_{joined_vtable_for<Any>}
@@ -60,18 +64,13 @@ struct Vehicle {
     other.vtbl_.remote->copy(ptr_, other.ptr_);       // skip-sample
   }                                                   // skip-sample
 
-  void accelerate() {
-    vtbl_.accelerate(ptr_);
-  }
+  void accelerate()
+  { vtbl_.accelerate(ptr_); }
 
   ~Vehicle() {
     vtbl_.remote->dtor(ptr_);
     std::free(ptr_);
   }
-
-private:
-  joined_vtable const vtbl_;
-  void* ptr_;
 };
 // end-sample
 

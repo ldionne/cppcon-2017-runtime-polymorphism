@@ -25,9 +25,8 @@ struct Vehicle {
     other.vtbl_.copy(ptr_, other.ptr_);               // skip-sample
   }                                                   // skip-sample
 
-  void accelerate() {
-    vtbl_.accelerate(ptr_);
-  }
+  void accelerate()
+  { vtbl_.accelerate(ptr_); }
 
   ~Vehicle() {
     vtbl_.dtor(ptr_);

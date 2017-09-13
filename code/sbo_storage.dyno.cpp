@@ -18,9 +18,8 @@ struct vehicle {
   template <typename Any>
   vehicle(Any v) : poly_{v} { }
 
-  void accelerate() {
-    poly_.virtual_("accelerate"_s)(poly_);
-  }
+  void accelerate()
+  { poly_.virtual_("accelerate"_s)(poly_); }
 
 private:
   dyno::poly<Vehicle, dyno::sbo_storage<16>> poly_;

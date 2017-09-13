@@ -11,7 +11,11 @@
 
 
 // sample(Vehicle)
-struct Vehicle {
+class Vehicle {
+  vtable const* const vptr_;
+  void* impl_;
+
+public:
   template <typename Any>
     // enabled only when vehicle.accelerate() is valid
   Vehicle(Any vehicle)
@@ -33,10 +37,6 @@ struct Vehicle {
     vptr_->dtor(impl_);
     std::free(impl_);
   }
-
-private:
-  vtable const* const vptr_;
-  void* impl_;
 };
 // end-sample
 

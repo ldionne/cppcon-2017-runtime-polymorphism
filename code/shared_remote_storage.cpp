@@ -17,15 +17,13 @@ class Vehicle {
 
 public:
   template <typename Any>
-    // enabled only when vehicle.accelerate() is valid
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
     , ptr_{std::make_shared<Any>(vehicle)}
   { }
 
-  void accelerate() {
-    vptr_->accelerate(ptr_.get());
-  }
+  void accelerate()
+  { vptr_->accelerate(ptr_.get()); }
 };
 // end-sample
 

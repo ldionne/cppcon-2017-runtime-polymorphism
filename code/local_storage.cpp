@@ -9,41 +9,30 @@
 #include <vector>
 
 
-// sample(Vehicle::Vehicle)
+// sample(Vehicle)
 class Vehicle {
   vtable const* const vptr_;
   std::aligned_storage_t<64> buffer_;
 
 public:
   template <typename Any>
-    // enabled only when vehicle.accelerate() is valid
-  Vehicle(Any vehicle)
-    : vptr_{&vtable_for<Any>}
-  {
+  Vehicle(Any vehicle) : vptr_{&vtable_for<Any>} {
     static_assert(sizeof(Any) <= sizeof(buffer_),
       "can't hold such a large object in a Vehicle");
     new (&buffer_) Any(vehicle);
   }
-// end-sample
+                                                        // skip-sample
+  Vehicle(Vehicle const& other) : vptr_{other.vptr_} {  // skip-sample
+    other.vptr_->copy(&buffer_, &other.buffer_);        // skip-sample
+  }                                                     // skip-sample
 
-  Vehicle(Vehicle const& other)
-    : vptr_{other.vptr_}
-  {
-    other.vptr_->copy(&buffer_, &other.buffer_);
-  }
+  void accelerate()
+  { vptr_->accelerate(&buffer_); }
 
-// sample(Vehicle::accelerate)
-  void accelerate() {
-    vptr_->accelerate(&buffer_);
-  }
-// end-sample
-
-// sample(Vehicle::~Vehicle)
-  ~Vehicle() {
-    vptr_->dtor(&buffer_);
-  }
-// end-sample
+  ~Vehicle()
+  { vptr_->dtor(&buffer_); }
 };
+// end-sample
 
 
 

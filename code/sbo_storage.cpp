@@ -11,8 +11,7 @@
 
 
 // sample(Vehicle::members)
-struct Vehicle {
-private:
+class Vehicle {
   vtable const* const vptr_;
   union {
     void* ptr_;
@@ -24,10 +23,7 @@ private:
 public:
 // sample(Vehicle::Vehicle)
   template <typename Any>
-    // enabled only when vehicle.accelerate() is valid
-  Vehicle(Any vehicle)
-    : vptr_{&vtable_for<Any>}
-  {
+  Vehicle(Any vehicle) : vptr_{&vtable_for<Any>} {
     if (sizeof(Any) > 16) {
       on_heap_ = true;
       ptr_ = std::malloc(sizeof(Any));
@@ -39,9 +35,7 @@ public:
   }
 // end-sample
 
-  Vehicle(Vehicle const& other)
-    : vptr_{other.vptr_}
-  {
+  Vehicle(Vehicle const& other) : vptr_{other.vptr_} {
     if (other.on_heap_) {
       ptr_ = std::malloc(other.vptr_->sizeof_);
       other.vptr_->copy(ptr_, other.ptr_);
