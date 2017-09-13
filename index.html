@@ -694,6 +694,27 @@ in the object, the compiler can see they don't change.
 
 ==============================================================================
 
+### The future with reflection?
+
+```c++
+struct Vehicle {
+  void accelerate();
+};
+
+int main() {
+  std::vector<any<Vehicle>> vehicles;
+  vehicles.push_back(Car{...});
+  vehicles.push_back(Truck{...});
+  vehicles.push_back(lib::Motorcycle{...});
+
+  for (auto& vehicle : vehicles) {
+    vehicle.accelerate();
+  }
+}
+```
+
+==============================================================================
+
 ### Summary
 
 - Many ways of storing polymorphic objects
