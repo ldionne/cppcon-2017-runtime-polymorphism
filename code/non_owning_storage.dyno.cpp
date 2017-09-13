@@ -5,25 +5,24 @@
 
 #include <dyno.hpp>
 
-#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
 using namespace dyno::literals;
 
 
-// sample(vehicle)
-struct vehicle {
+// sample(VehicleRef)
+struct VehicleRef {
   template <typename Any>
-  vehicle(Any v) : poly_{v} { }
+  VehicleRef(Any& vehicle) : poly_{vehicle} { }
+  //         ^^^^ now a reference
 
   void accelerate()
   { poly_.virtual_("accelerate"_s)(poly_); }
 
 private:
-  using VTable = dyno::vtable<dyno::local<dyno::everything>>;
-  //             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  dyno::poly<Vehicle, dyno::remote_storage, VTable> poly_;
+  dyno::poly<Vehicle, dyno::non_owning_storage> poly_;
+  //                  ^^^^^^^^^^^^^^^^^^^^^^^^
 };
 // end-sample
 
@@ -49,13 +48,16 @@ struct Plane {
 
 // sample(main)
 int main() {
-  std::vector<vehicle> vehicles;
+  Car audi{"Audi", 2017};
+  Truck chevrolet{"Chevrolet", 2015};
+  Plane boeing{"Boeing", "747"};
 
-  vehicles.push_back(Car{"Audi", 2017});
-  vehicles.push_back(Truck{"Chevrolet", 2015});
-  vehicles.push_back(Plane{"Boeing", "747"});
+  std::vector<VehicleRef> vehicles;
+  vehicles.push_back(audi);
+  vehicles.push_back(chevrolet);
+  vehicles.push_back(boeing);
 
-  for (auto& vehicle : vehicles) {
+  for (VehicleRef vehicle : vehicles) {
     vehicle.accelerate();
   }
 }
