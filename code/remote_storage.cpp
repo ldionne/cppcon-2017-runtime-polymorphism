@@ -17,7 +17,6 @@ class Vehicle {
 
 public:
   template <typename Any>
-    // enabled only when vehicle.accelerate() is valid
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
     , impl_{std::malloc(sizeof(Any))}
