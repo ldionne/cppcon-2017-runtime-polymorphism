@@ -23,7 +23,7 @@ struct VehicleRef {
   }
 
 private:
-  vtable const* vptr_;
+  vtable const* const vptr_;
   void* ref_;
 };
 // end-sample

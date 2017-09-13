@@ -12,7 +12,7 @@
 
 // sample(Vehicle)
 class Vehicle {
-  vtable const* vptr_;
+  vtable const* const vptr_;
   std::shared_ptr<void> ptr_;
 
 public:

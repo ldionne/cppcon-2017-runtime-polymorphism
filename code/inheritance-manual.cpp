@@ -21,7 +21,7 @@ vtable const vtable_for = {
 
 // sample(Vehicle)
 struct Vehicle {
-  vtable const* vptr_;
+  vtable const* const vptr_;
   void accelerate() { vptr_->accelerate(this); }
   ~Vehicle() { vptr_->dtor(this); }
 };

@@ -13,7 +13,7 @@
 // sample(Vehicle::members)
 struct Vehicle {
 private:
-  vtable const* vptr_;
+  vtable const* const vptr_;
   union {
     void* ptr_;
     std::aligned_storage_t<16> buffer_;

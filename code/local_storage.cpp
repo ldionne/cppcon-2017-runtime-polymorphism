@@ -11,7 +11,7 @@
 
 // sample(Vehicle::Vehicle)
 class Vehicle {
-  vtable const* vptr_;
+  vtable const* const vptr_;
   std::aligned_storage_t<64> buffer_;
 
 public:

@@ -32,7 +32,7 @@ vtable const vtable_for = {
 
 // sample(joined_vtable)
 struct joined_vtable {
-  vtable const* remote;
+  vtable const* const remote;
   void (*accelerate)(void* this_);
 };
 

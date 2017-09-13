@@ -26,9 +26,8 @@ struct Vehicle {
     other.vptr_->copy(impl_, other.impl_);            // skip-sample
   }                                                   // skip-sample
 
-  void accelerate() {
-    vptr_->accelerate(impl_);
-  }
+  void accelerate()
+  { vptr_->accelerate(impl_); }
 
   ~Vehicle() {
     vptr_->dtor(impl_);
@@ -36,7 +35,7 @@ struct Vehicle {
   }
 
 private:
-  vtable const* vptr_;
+  vtable const* const vptr_;
   void* impl_;
 };
 // end-sample
