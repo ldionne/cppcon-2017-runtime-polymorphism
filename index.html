@@ -118,6 +118,16 @@ int main() {
 ### Bakes in reference semantics
 
 ```c++
+void foo(Vehicle* vehicle) {
+  ...
+  vehicle->accelerate();
+  ...
+}
+```
+
+or
+
+```c++
 void foo(Vehicle& vehicle) {
   ...
   vehicle.accelerate();
