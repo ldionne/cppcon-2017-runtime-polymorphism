@@ -37,7 +37,6 @@
 
 <!-- FEEDBACK FROM MEETUP:
 - consider splitting into two talks (vtables 1, storage 2)
-- need to explain that these are compile-time strings, what that means, especially for performance
 - Diagrams would help with the first few slides on type erasure.
 - On the first appearance of std::malloc, show the vtable as fast as possible
 - we can inline the bool into the vtable's function definition, since they always know whether the thing is going to be SBO'd or not
@@ -342,6 +341,10 @@ int main() {
 ### With Dyno
 
 <pre><code data-sample='code/remote_storage.dyno.cpp#Vehicle'></code></pre>
+
+Note:
+Explain that this is a compile-time string, and it's as efficient as a
+member access in a struct (the vtable).
 
 ----
 
