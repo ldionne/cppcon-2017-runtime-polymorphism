@@ -33,8 +33,25 @@
         <script type="text/template">
 
 ## Runtime Polymorphism:<br>Back to the Basics
-#### Louis Dionne
-<!-- , CppCon 2017 -->
+#### Louis Dionne, CppCon 2017
+
+<!-- FEEDBACK FROM MEETUP:
+- consider splitting into two talks (vtables 1, storage 2)
+- need to explain that these are compile-time strings, what that means, especially for performance
+- introduction is missing definition of base classes
+- add slide numbers
+- Diagrams would help with the first few slides on type erasure.
+- On the first appearance of std::malloc, show the vtable as fast as possible
+- Consider merging malloc + placement new into single call to new, nad dtor + free into `delete`
+- there's a leak if the ctor of Any throws when I use malloc for remote storage
+- we can inline the bool into the vtable's function definition, since they always know whether the thing is going to be SBO'd or not
+- Perhaps too many benchmark results.
+- Use bar graphs instead of Google.Benchmark tables to show results.
+- show less code slides, more diagrams
+- Good point: state motives early on (what this talk is about)
+- placement new can throw people off guard, make sure to explain it
+- don't show any code related to copy construction (or maybe as bonus)
+-->
 
 ==============================================================================
 
