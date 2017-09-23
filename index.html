@@ -359,7 +359,6 @@ int main() {
 
 <ul>
   <li class="strength">Simple model, similar to classic inheritance</li>
-  <li class="strength">May be easier to keep ABI stable, unlike other techniques we will see</li>
   <li class="weakness">Always requires an allocation</li>
 </ul>
 
@@ -427,7 +426,6 @@ int main() {
   <li class="weakness">Takes up more space</li>
   <li class="weakness">Copy/move/swap is more complicated</li>
   <li class="weakness">Dispatching may be more costly</li>
-  <li class="weakness">Size of buffer leaks into the ABI</li>
 </ul>
 
 Note:
@@ -463,7 +461,6 @@ We need to handle cases where the two types are not the same in swap.
   <li class="strength">No allocation &ndash; ever</li>
   <li class="strength">Simple dispatching</li>
   <li class="weakness">Takes up more space</li>
-  <li class="weakness">Size of buffer leaks into ABI</li>
 </ul>
 
 ====================
