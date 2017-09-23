@@ -21,11 +21,8 @@ public:
     : vptr_{&vtable_for<Any>}
     , ptr_{new Any(vehicle)}
   { }
-                                                      // skip-sample
-  Vehicle(Vehicle const& other)                       // skip-sample
-    : vptr_{other.vptr_}                              // skip-sample
-    , ptr_{other.vptr_->clone(other.ptr_)}            // skip-sample
-  { }                                                 // skip-sample
+
+  Vehicle(Vehicle const& other); // implementation omitted
 
   void accelerate()
   { vptr_->accelerate(ptr_); }
@@ -35,6 +32,10 @@ public:
 };
 // end-sample
 
+Vehicle::Vehicle(Vehicle const& other)
+  : vptr_{other.vptr_}
+  , ptr_{other.vptr_->clone(other.ptr_)}
+{ }
 
 //////////////////////////////////////////////////////////////////////////////
 struct Car {
