@@ -39,8 +39,6 @@
 - consider splitting into two talks (vtables 1, storage 2)
 - Diagrams would help with the first few slides on type erasure.
 - we can inline the bool into the vtable's function definition, since they always know whether the thing is going to be SBO'd or not
-- Perhaps too many benchmark results.
-- Use bar graphs instead of Google.Benchmark tables to show results.
 - show less code slides, more diagrams
 - Good point: state motives early on (what this talk is about)
 -->
@@ -472,78 +470,169 @@ We need to handle cases where the two types are not the same in swap.
 ### Some benchmarks
 
 Creating many 4 bytes objects
-```
-                                 Time         Iterations to converge
-remote storage                   54 ns        13264107
-SBO storage (4 bytes)             2 ns        284751940
-SBO storage (8 bytes)             2 ns        292815969
-SBO storage (16 bytes)            2 ns        288159525
-local storage (16 bytes)          2 ns        332593708
-```
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [80]
+      }
+    },
+    "hAxis": { "title": "Storage type" }
+  },
+  "data": [
+    ["Storage type", "Time (ns)"],
+    ["remote storage", 54],
+    ["SBO storage (4 bytes)", 2],
+    ["SBO storage (8 bytes)", 2],
+    ["SBO storage (16 bytes)", 2],
+    ["local storage (16 bytes)", 2]
+  ]
+}
+</div>
 
 ----
 
 Creating many 16 bytes objects
-```
-                                 Time         Iterations to converge
-remote storage                   54 ns        13214030
-SBO storage (4 bytes)            54 ns        12794502
-SBO storage (8 bytes)            54 ns        13144553
-SBO storage (16 bytes)            2 ns        287227800
-local storage (16 bytes)          2 ns        322754665
-```
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [80]
+      }
+    },
+    "hAxis": { "title": "Storage type" }
+  },
+  "data": [
+    ["Storage type", "Time (ns)"],
+    ["remote storage", 54],
+    ["SBO storage (4 bytes)", 54],
+    ["SBO storage (8 bytes)", 54],
+    ["SBO storage (16 bytes)", 2],
+    ["local storage (16 bytes)", 2]
+  ]
+}
+</div>
 
 ----
 
 Accessing many 4 bytes objects<br>
 (10 x 3 method calls, SBO with bool)
-```
-                                 Time         Iterations to converge
-remote storage                   46 ns        15344820
-SBO storage (4 bytes)            59 ns        12048400
-SBO storage (8 bytes)            59 ns        12067717
-SBO storage (16 bytes)           59 ns        11312400
-local storage (16 bytes)         47 ns        15127808
-```
+
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [80]
+      }
+    },
+    "hAxis": { "title": "Storage type" }
+  },
+  "data": [
+    ["Storage type", "Time (ns)"],
+    ["remote storage", 46],
+    ["SBO storage (4 bytes)", 59],
+    ["SBO storage (8 bytes)", 59],
+    ["SBO storage (16 bytes)", 59],
+    ["local storage (16 bytes)", 47]
+  ]
+}
+</div>
 
 ----
 
 Accessing many objects<br>
 (half 8 bytes, half 16 bytes, SBO with bool)
-```
-                                 Time         Iterations to converge
-remote storage                   46 ns        14148932
-SBO storage (4 bytes)            55 ns        12897995
-SBO storage (8 bytes)            57 ns        11330894
-SBO storage (16 bytes)           57 ns        12648393
-local storage (16 bytes)         46 ns        14811617
-```
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [80]
+      }
+    },
+    "hAxis": { "title": "Storage type" }
+  },
+  "data": [
+    ["Storage type", "Time (ns)"],
+    ["remote storage", 46],
+    ["SBO storage (4 bytes)", 55],
+    ["SBO storage (8 bytes)", 57],
+    ["SBO storage (16 bytes)", 57],
+    ["local storage (16 bytes)", 46]
+  ]
+}
+</div>
 
 ----
 
 Accessing many 4 bytes objects
 <br>(10 x 3 method calls, SBO with pointer)
-```
-                                 Time         Iterations to converge
-remote storage                   47 ns        13849319
-SBO storage (4 bytes)            46 ns        14770924
-SBO storage (8 bytes)            46 ns        15021298
-SBO storage (16 bytes)           46 ns        15104632
-local storage (16 bytes)         47 ns        14765222
-```
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [80]
+      }
+    },
+    "hAxis": { "title": "Storage type" }
+  },
+  "data": [
+    ["Storage type", "Time (ns)"],
+    ["remote storage", 47],
+    ["SBO storage (4 bytes)", 46],
+    ["SBO storage (8 bytes)", 46],
+    ["SBO storage (16 bytes)", 46],
+    ["local storage (16 bytes)", 47]
+  ]
+}
+</div>
 
 ----
 
 Accessing many objects<br>
 (half 8 bytes, half 16 bytes, SBO with pointer)
-```
-                                 Time         Iterations to converge
-remote storage                   48 ns        14687893
-SBO storage (4 bytes)            47 ns        14681670
-SBO storage (8 bytes)            47 ns        15141945
-SBO storage (16 bytes)           48 ns        14424959
-local storage (16 bytes)         48 ns        14740225
-```
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [80]
+      }
+    },
+    "hAxis": { "title": "Storage type" }
+  },
+  "data": [
+    ["Storage type", "Time (ns)"],
+    ["remote storage", 48],
+    ["SBO storage (4 bytes)", 47],
+    ["SBO storage (8 bytes)", 47],
+    ["SBO storage (16 bytes)", 48],
+    ["local storage (16 bytes)", 48]
+  ]
+}
+</div>
 
 ----
 
@@ -684,12 +773,27 @@ int main() {
 ### Some benchmarks
 
 Calling 2 virtual functions (100 x 2 calls)
-```
-                                 Time         Iterations to converge
-everything remote                462 ns       1527340
-1 function local                 438 ns       1384193
-2 functions local                487 ns       1430346
-```
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [500]
+      }
+    },
+    "hAxis": { "title": "VTable flavor" }
+  },
+  "data": [
+    ["VTable flavor", "Time (ns)"],
+    ["everything remote", 462],
+    ["1 function local", 438],
+    ["2 functions local", 487]
+  ]
+}
+</div>
 
 ----
 
@@ -776,8 +880,9 @@ https://ldionne.com
       </div>
     </div>
 
-    <script src="reveal/lib/js/head.min.js"></script>
+    <script src="js/google-chart.js"></script>
     <script src="reveal/js/reveal.js"></script>
+    <script src="reveal/lib/js/head.min.js"></script>
 
     <script>
       Reveal.initialize({
@@ -792,6 +897,23 @@ https://ldionne.com
           { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
           { src: 'plugin/sampler.js' }
         ]
+      });
+
+      // Whenever the slide changes, we scan the current slide to see whether
+      // there are Google charts to format, and we do it.
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(function() {
+        Reveal.addEventListener('slidechanged', function(event) {
+          event.currentSlide.querySelectorAll('.google-chart').forEach(function(div) {
+            if (!div.hasAttribute("data-chart-config")) {
+              div.setAttribute("data-chart-config", div.innerHTML);
+            }
+            var config = JSON.parse(div.getAttribute("data-chart-config"));
+            var data = google.visualization.arrayToDataTable(config.data);
+            var chart = new google.charts.Bar(div);
+            chart.draw(data, google.charts.Bar.convertOptions(config.options));
+          });
+        });
       });
     </script>
   </body>
