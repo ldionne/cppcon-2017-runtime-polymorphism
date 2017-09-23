@@ -38,7 +38,6 @@
 <!-- FEEDBACK FROM MEETUP:
 - consider splitting into two talks (vtables 1, storage 2)
 - need to explain that these are compile-time strings, what that means, especially for performance
-- introduction is missing definition of base classes
 - add slide numbers
 - Diagrams would help with the first few slides on type erasure.
 - On the first appearance of std::malloc, show the vtable as fast as possible
@@ -56,6 +55,24 @@
 ==============================================================================
 
 ### What is runtime polymorphism <br> and when do you need it?
+
+----
+
+### Assume the following
+
+```c++
+struct Car {
+  void accelerate();
+};
+
+struct Truck {
+  void accelerate();
+};
+
+struct Plane {
+  void accelerate();
+};
+```
 
 ----
 
