@@ -9,7 +9,7 @@
 
 // sample(VehicleBase)
 struct VehicleBase {
-  virtual std::unique_ptr<VehicleBase> clone() const = 0;
+  virtual std::unique_ptr<VehicleBase> clone() const = 0; // skip-sample
   virtual void accelerate() = 0;
   virtual ~VehicleBase() { }
 };
@@ -19,9 +19,9 @@ struct VehicleImpl : VehicleBase {
   VehicleImpl(Any vehicle)
     : vehicle_(vehicle)
   { }
-
-  std::unique_ptr<VehicleBase> clone() const override
-  { return std::make_unique<VehicleImpl>(vehicle_); }
+                                                      // skip-sample
+  std::unique_ptr<VehicleBase> clone() const override // skip-sample
+  { return std::make_unique<VehicleImpl>(vehicle_); } // skip-sample
 
   void accelerate() override
   { vehicle_.accelerate(); }
@@ -37,10 +37,10 @@ struct Vehicle {
   Vehicle(Any vehicle)
     : impl_{std::make_unique<VehicleImpl<Any>>(vehicle)}
   { }
-
-  Vehicle(Vehicle const& other)
-    : impl_{other.impl_->clone()}
-  { }
+                                      // skip-sample
+  Vehicle(Vehicle const& other)       // skip-sample
+    : impl_{other.impl_->clone()}     // skip-sample
+  { }                                 // skip-sample
 
   void accelerate()
   { impl_->accelerate(); }
