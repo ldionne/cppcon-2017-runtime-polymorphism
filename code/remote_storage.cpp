@@ -13,25 +13,25 @@
 // sample(Vehicle)
 class Vehicle {
   vtable const* const vptr_;
-  void* impl_;
+  void* ptr_;
 
 public:
   template <typename Any>
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
-    , impl_{new Any(vehicle)}
+    , ptr_{new Any(vehicle)}
   { }
                                                       // skip-sample
   Vehicle(Vehicle const& other)                       // skip-sample
     : vptr_{other.vptr_}                              // skip-sample
-    , impl_{other.vptr_->clone(other.impl_)}          // skip-sample
+    , ptr_{other.vptr_->clone(other.ptr_)}            // skip-sample
   { }                                                 // skip-sample
 
   void accelerate()
-  { vptr_->accelerate(impl_); }
+  { vptr_->accelerate(ptr_); }
 
   ~Vehicle()
-  { vptr_->delete_(impl_); }
+  { vptr_->delete_(ptr_); }
 };
 // end-sample
 

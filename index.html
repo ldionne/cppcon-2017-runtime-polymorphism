@@ -38,7 +38,6 @@
 <!-- FEEDBACK FROM MEETUP:
 - consider splitting into two talks (vtables 1, storage 2)
 - Diagrams would help with the first few slides on type erasure.
-- On the first appearance of std::malloc, show the vtable as fast as possible
 - we can inline the bool into the vtable's function definition, since they always know whether the thing is going to be SBO'd or not
 - Perhaps too many benchmark results.
 - Use bar graphs instead of Google.Benchmark tables to show results.
@@ -329,6 +328,9 @@ int main() {
 ### How that's implemented
 
 <pre><code data-sample='code/remote_storage.cpp#Vehicle'></code></pre>
+
+Note:
+Quickly show a preview of the vtable, and then come back to explain.
 
 ----
 
