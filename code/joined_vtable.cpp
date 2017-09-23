@@ -10,23 +10,21 @@
 
 // sample(vtable)
 struct vtable {
-  void (*dtor)(void* this_);
+  void (*delete_)(void* this_);
   // ...
-  void (*copy)(void* p, void const* other); // skip-sample
-  std::size_t sizeof_;                      // skip-sample
+  void* (*clone)(void const* other); // skip-sample
 };
 
 template <typename T>
 vtable const vtable_for = {
   [](void* this_) {
-    static_cast<T*>(this_)->~T();
+    delete static_cast<T*>(this_);
   }
   // ...
-  ,                                           // skip-sample
-  [](void* p, void const* other) {            // skip-sample
-    new (p) T(*static_cast<T const*>(other)); // skip-sample
-  },                                          // skip-sample
-  sizeof(T)                                   // skip-sample
+  ,                                               // skip-sample
+  [](void const* this_) -> void* {                // skip-sample
+    return new T(*static_cast<T const*>(this_));  // skip-sample
+  }                                               // skip-sample
 };
 // end-sample
 
@@ -54,23 +52,19 @@ public:
   template <typename Any>
   Vehicle(Any vehicle)
     : vtbl_{joined_vtable_for<Any>}
-    , ptr_{std::malloc(sizeof(Any))}
-  { new (ptr_) Any{vehicle}; }
+    , ptr_{new Any(vehicle)}
+  { }
                                                       // skip-sample
   Vehicle(Vehicle const& other)                       // skip-sample
     : vtbl_{other.vtbl_}                              // skip-sample
-    , ptr_{std::malloc(other.vtbl_.remote->sizeof_)}  // skip-sample
-  {                                                   // skip-sample
-    other.vtbl_.remote->copy(ptr_, other.ptr_);       // skip-sample
-  }                                                   // skip-sample
+    , ptr_{other.vtbl_.remote->clone(other.ptr_)}     // skip-sample
+  { }                                                 // skip-sample
 
   void accelerate()
   { vtbl_.accelerate(ptr_); }
 
-  ~Vehicle() {
-    vtbl_.remote->dtor(ptr_);
-    std::free(ptr_);
-  }
+  ~Vehicle()
+  { vtbl_.remote->delete_(ptr_); }
 };
 // end-sample
 

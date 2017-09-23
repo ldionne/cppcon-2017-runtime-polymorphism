@@ -15,23 +15,19 @@ struct Vehicle {
   template <typename Any>
   Vehicle(Any vehicle)
     : vtbl_{vtable_for<Any>}
-    , ptr_{std::malloc(sizeof(Any))}
-  { new (ptr_) Any{vehicle}; }
+    , ptr_{new Any(vehicle)}
+  { }
                                                       // skip-sample
   Vehicle(Vehicle const& other)                       // skip-sample
     : vtbl_{other.vtbl_}                              // skip-sample
-    , ptr_{std::malloc(other.vtbl_.sizeof_)}          // skip-sample
-  {                                                   // skip-sample
-    other.vtbl_.copy(ptr_, other.ptr_);               // skip-sample
-  }                                                   // skip-sample
+    , ptr_{other.vtbl_.clone(other.ptr_)}             // skip-sample
+  { }                                                 // skip-sample
 
   void accelerate()
   { vtbl_.accelerate(ptr_); }
 
-  ~Vehicle() {
-    vtbl_.dtor(ptr_);
-    std::free(ptr_);
-  }
+  ~Vehicle()
+  { vtbl_.delete_(ptr_); }
 
 private:
   vtable const vtbl_; // <= not a pointer!

@@ -26,8 +26,7 @@ public:
   Vehicle(Any vehicle) : vptr_{&vtable_for<Any>} {
     if (sizeof(Any) > 16) {
       on_heap_ = true;
-      ptr_ = std::malloc(sizeof(Any));
-      new (ptr_) Any{vehicle};
+      ptr_ = new Any(vehicle);
     } else {
       on_heap_ = false;
       new (&buffer_) Any{vehicle};
@@ -37,8 +36,7 @@ public:
 
   Vehicle(Vehicle const& other) : vptr_{other.vptr_} {
     if (other.on_heap_) {
-      ptr_ = std::malloc(other.vptr_->sizeof_);
-      other.vptr_->copy(ptr_, other.ptr_);
+      ptr_ = other.vptr_->clone(other.ptr_);
     } else {
       other.vptr_->copy(&buffer_, &other.buffer_);
     }
@@ -53,8 +51,7 @@ public:
 // sample(Vehicle::~Vehicle)
   ~Vehicle() {
     if (on_heap_) {
-      vptr_->dtor(ptr_);
-      std::free(ptr_);
+      vptr_->delete_(ptr_);
     } else {
       vptr_->dtor(&buffer_);
     }

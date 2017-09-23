@@ -19,23 +19,19 @@ public:
   template <typename Any>
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
-    , impl_{std::malloc(sizeof(Any))}
-  { new (impl_) Any{vehicle}; }
+    , impl_{new Any(vehicle)}
+  { }
                                                       // skip-sample
   Vehicle(Vehicle const& other)                       // skip-sample
     : vptr_{other.vptr_}                              // skip-sample
-    , impl_{std::malloc(other.vptr_->sizeof_)}        // skip-sample
-  {                                                   // skip-sample
-    other.vptr_->copy(impl_, other.impl_);            // skip-sample
-  }                                                   // skip-sample
+    , impl_{other.vptr_->clone(other.impl_)}          // skip-sample
+  { }                                                 // skip-sample
 
   void accelerate()
   { vptr_->accelerate(impl_); }
 
-  ~Vehicle() {
-    vptr_->dtor(impl_);
-    std::free(impl_);
-  }
+  ~Vehicle()
+  { vptr_->delete_(impl_); }
 };
 // end-sample
 

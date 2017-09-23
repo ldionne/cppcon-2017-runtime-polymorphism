@@ -23,7 +23,7 @@ struct Vehicle {
 private:
   using VTable = dyno::vtable<
                   dyno::local<dyno::only<decltype("accelerate"_s)>>,
-                  dyno::remote<dyno::everything>>;
+                  dyno::remote<dyno::everything_else>>;
   //             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   dyno::poly<IVehicle, dyno::remote_storage, VTable> poly_;
 };
