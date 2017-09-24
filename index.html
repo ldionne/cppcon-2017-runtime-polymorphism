@@ -829,6 +829,27 @@ int main() {
 }
 ```
 
+----
+
+### The future with metaclasses?
+
+```c++
+interface Vehicle {
+  void accelerate();
+};
+
+int main() {
+  std::vector<Vehicle> vehicles;
+  vehicles.push_back(Car{...});
+  vehicles.push_back(Truck{...});
+  vehicles.push_back(lib::Motorcycle{...});
+
+  for (auto& vehicle : vehicles) {
+    vehicle.accelerate();
+  }
+}
+```
+
 ==============================================================================
 
 ### Summary
