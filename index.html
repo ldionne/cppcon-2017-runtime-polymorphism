@@ -37,7 +37,6 @@
 
 <!-- FEEDBACK FROM MEETUP:
 - consider splitting into two talks (vtables 1, storage 2)
-- Diagrams would help with the first few slides on type erasure.
 - we can inline the bool into the vtable's function definition, since they always know whether the thing is going to be SBO'd or not
 - show less code slides, more diagrams
 - Good point: state motives early on (what this talk is about)
@@ -288,26 +287,7 @@ int main() {
 
 ### How might that work?
 
-<pre><code data-sample='code/sean.cpp#Vehicle'></code></pre>
-
-<!-- TODO: The following two slides are way too dense -->
-
 ----
-
-<pre><code data-sample='code/sean.cpp#VehicleBase'></code></pre>
-
-----
-
-### Just like inheritance under the hood
-
-![Naive type erasure](img/sean.png)
-
-----
-
-### But we're decoupled from inheritance
-#### Now we can have some fun
-
-==============================================================================
 
 ### Goal:
 #### Independent storage and method dispatch

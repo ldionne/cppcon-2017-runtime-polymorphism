@@ -17,6 +17,7 @@ class Vehicle {
 
 public:
   template <typename Any>
+    // enabled only when vehicle.accelerate() is valid
   Vehicle(Any vehicle)
     : vptr_{&vtable_for<Any>}
     , ptr_{new Any(vehicle)}
