@@ -639,8 +639,10 @@ Accessing many objects<br>
 ### Guidelines
 
 - Use local storage whenever you can afford it
-- When space is very important, use remote storage
-- Otherwise, use SBO with the largest size you can afford (depending on your problem)
+- Otherwise, use SBO with the largest size that makes sense
+- Use purely-remote storage only when
+  + Object sizes are so scattered SBO wouldn't help
+  + Few objects are created, but they are moved all the time (???)
 
 ====================
 
