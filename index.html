@@ -41,7 +41,6 @@ TODO:
   guinea pigs. This would give much better real world examples than `Vehicle`.
 - Present an example where pulling the vtable down allows devirtualizing what
   could not normally be devirtualized by the compiler.
-- We need to present benchmarks against classic inheritance
 - We need to present benchmarks against variant too
 -->
 
@@ -476,11 +475,12 @@ Creating many 4 bytes objects
   },
   "data": [
     ["Storage type", "Time (ns)"],
-    ["remote storage", 54],
-    ["SBO storage (4 bytes)", 2],
-    ["SBO storage (8 bytes)", 2],
-    ["SBO storage (16 bytes)", 2],
-    ["local storage (16 bytes)", 2]
+    ["inheritance", 56],
+    ["remote storage", 55],
+    ["SBO storage (4 bytes)", 3],
+    ["SBO storage (8 bytes)", 3],
+    ["SBO storage (16 bytes)", 3],
+    ["local storage (16 bytes)", 3]
   ]
 }
 </div>
@@ -503,10 +503,11 @@ Creating many 16 bytes objects
   },
   "data": [
     ["Storage type", "Time (ns)"],
+    ["inheritance", 55],
     ["remote storage", 54],
     ["SBO storage (4 bytes)", 54],
-    ["SBO storage (8 bytes)", 54],
-    ["SBO storage (16 bytes)", 2],
+    ["SBO storage (8 bytes)", 56],
+    ["SBO storage (16 bytes)", 3],
     ["local storage (16 bytes)", 2]
   ]
 }
@@ -532,11 +533,12 @@ Accessing many 4 bytes objects<br>
   },
   "data": [
     ["Storage type", "Time (ns)"],
-    ["remote storage", 46],
+    ["inheritance", 49],
+    ["remote storage", 45],
     ["SBO storage (4 bytes)", 59],
-    ["SBO storage (8 bytes)", 59],
-    ["SBO storage (16 bytes)", 59],
-    ["local storage (16 bytes)", 47]
+    ["SBO storage (8 bytes)", 58],
+    ["SBO storage (16 bytes)", 58],
+    ["local storage (16 bytes)", 46]
   ]
 }
 </div>
@@ -562,10 +564,11 @@ Accessing many objects<br>
   },
   "data": [
     ["Storage type", "Time (ns)"],
-    ["remote storage", 46],
-    ["SBO storage (4 bytes)", 55],
-    ["SBO storage (8 bytes)", 57],
-    ["SBO storage (16 bytes)", 57],
+    ["inheritance", 46],
+    ["remote storage", 47],
+    ["SBO storage (4 bytes)", 56],
+    ["SBO storage (8 bytes)", 56],
+    ["SBO storage (16 bytes)", 58],
     ["local storage (16 bytes)", 46]
   ]
 }
@@ -590,11 +593,12 @@ Accessing many 4 bytes objects
   },
   "data": [
     ["Storage type", "Time (ns)"],
-    ["remote storage", 47],
+    ["inheritance", 49],
+    ["remote storage", 46],
     ["SBO storage (4 bytes)", 46],
-    ["SBO storage (8 bytes)", 46],
-    ["SBO storage (16 bytes)", 46],
-    ["local storage (16 bytes)", 47]
+    ["SBO storage (8 bytes)", 45],
+    ["SBO storage (16 bytes)", 45],
+    ["local storage (16 bytes)", 46]
   ]
 }
 </div>
@@ -620,11 +624,12 @@ Accessing many objects<br>
   },
   "data": [
     ["Storage type", "Time (ns)"],
-    ["remote storage", 48],
-    ["SBO storage (4 bytes)", 47],
-    ["SBO storage (8 bytes)", 47],
-    ["SBO storage (16 bytes)", 48],
-    ["local storage (16 bytes)", 48]
+    ["inheritance", 49],
+    ["remote storage", 45],
+    ["SBO storage (4 bytes)", 53],
+    ["SBO storage (8 bytes)", 50],
+    ["SBO storage (16 bytes)", 45],
+    ["local storage (16 bytes)", 46]
   ]
 }
 </div>
@@ -783,9 +788,10 @@ Calling 2 virtual functions (100 x 2 calls)
   },
   "data": [
     ["VTable flavor", "Time (ns)"],
-    ["everything remote", 462],
-    ["1 function local", 438],
-    ["2 functions local", 487]
+    ["inheritance", 452],
+    ["everything remote", 454],
+    ["1 function local", 452],
+    ["2 functions local", 483]
   ]
 }
 </div>
