@@ -39,8 +39,6 @@
 TODO:
 - Consider using `function_ref`, `std::function`, and `inplace_function` as
   guinea pigs. This would give much better real world examples than `Vehicle`.
-- Present an example where pulling the vtable down allows devirtualizing what
-  could not normally be devirtualized by the compiler.
 - We need to present benchmarks against variant too
 -->
 
@@ -816,6 +814,109 @@ in the object, the compiler can see they don't change.
 
 ----
 
+### A story of inlining
+
+```c++
+template <typename AnyIterator, typename It>
+__attribute__((noinline)) AnyIterator make(It it) {
+  return AnyIterator{std::move(it)};
+}
+
+template <typename AnyIterator>
+void benchmark_any_iterator(benchmark::State& state) {
+  std::vector<int> input{...};
+
+  while (state.KeepRunning()) {
+    auto first = make<AnyIterator>(input.begin());
+    auto last = make<AnyIterator>(input.end());
+    auto result = make<AnyIterator>(output.begin());
+
+    for (; !(first == last); ++first, ++result) {
+      *result = *first;
+    }
+  }
+}
+```
+
+----
+
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [1200]
+      }
+    },
+    "hAxis": { "title": "VTable flavor" }
+  },
+  "data": [
+    ["VTable flavor", "Time (ns)"],
+    ["static dispatch", 14],
+    ["inheritance", 1126],
+    ["dyno's remote vtable", 1089]
+  ]
+}
+</div>
+
+----
+
+### Now, just a small tweak
+
+```c++
+template <typename AnyIterator, typename It>
+// __attribute__((noinline))
+AnyIterator make(It it) {
+  return AnyIterator{std::move(it)};
+}
+```
+
+----
+
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [1200]
+      }
+    },
+    "hAxis": { "title": "VTable flavor" }
+  },
+  "data": [
+    ["VTable flavor", "Time (ns)"],
+    ["static dispatch", 11],
+    ["inheritance", 1070],
+    ["dyno's remote vtable", 11]
+  ]
+}
+</div>
+
+----
+
+### What happened?
+
+<div align="left">Inheritance:</div>
+![Implementation of inheritance](img/inheritance.png)
+
+<div align="left">Dyno's remote vtable:</div>
+![Dyno's remote vtable](img/remote_vtable.png)
+
+----
+
+### What's the lesson?
+
+- Reducing pointer hops can lead to unexpected inlining
+- When that happens, giant optimizations become possible
+
+----
+
 ### Guidelines
 
 - By default, all methods are in the remote vtable
@@ -871,6 +972,7 @@ int main() {
 ### Summary
 
 - Inheritance model is just one option amongst others
+  + Don't bake that choice in
 - Many ways of storing polymorphic objects
   + As always, space/time tradeoff
 - Vtables can be inlined (measure!)
