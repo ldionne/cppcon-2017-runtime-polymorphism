@@ -35,11 +35,10 @@
 ## Runtime Polymorphism:<br>Back to the Basics
 #### Louis Dionne, CppCon 2017
 
-<!-- FEEDBACK FROM MEETUP:
-- consider splitting into two talks (vtables 1, storage 2)
-- we can inline the bool into the vtable's function definition, since they always know whether the thing is going to be SBO'd or not
-- show less code slides, more diagrams
-- Good point: state motives early on (what this talk is about)
+<!--
+TODO:
+- Consider using `function_ref`, `std::function`, and `inplace_function` as
+  guinea pigs. This would give much better real world examples than `Vehicle`.
 -->
 
 ==============================================================================
@@ -295,6 +294,10 @@ int main() {
 - Storage _policy_
 - VTable _policy_
 
+Note:
+State motivation for the talk, i.e. we're going to play around with different
+ways of implementing the `interface` keyword shown above.
+
 ====================
 
 ### Remote storage
@@ -379,6 +382,10 @@ Make sure to explain placement new.
 ### Alternative implementation 1
 
 ![Type erasure with SBO, alternative implementation 1](img/sbo_storage-alternative1.png)
+
+Note:
+We can actually inline the bool into the vtable's function definitions, since
+they always know whether the thing is going to be in the buffer or on the heap.
 
 ----
 
