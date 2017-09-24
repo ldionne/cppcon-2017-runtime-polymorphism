@@ -543,6 +543,8 @@ Accessing many 4 bytes objects<br>
 
 ----
 
+<!-- .slide: class="slide-hidden" -->
+
 Accessing many objects<br>
 (half 8 bytes, half 16 bytes, SBO with bool)
 <div class="google-chart">
@@ -598,6 +600,8 @@ Accessing many 4 bytes objects
 </div>
 
 ----
+
+<!-- .slide: class="slide-hidden" -->
 
 Accessing many objects<br>
 (half 8 bytes, half 16 bytes, SBO with pointer)
@@ -894,6 +898,7 @@ https://ldionne.com
     </div>
 
     <script src="js/google-chart.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
     <script src="reveal/js/reveal.js"></script>
     <script src="reveal/lib/js/head.min.js"></script>
 
@@ -910,6 +915,15 @@ https://ldionne.com
           { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
           { src: 'plugin/sampler.js' }
         ]
+      });
+
+      // Remove all DOM elements with the 'slide-hidden' class. This allows
+      // statically marking slides as hidden to exclude them from the
+      // presentation.
+      Reveal.addEventListener('ready', function(event) {
+        $(".slide-hidden").each(function(index, slide) {
+          slide.remove();
+        });
       });
 
       // Whenever the slide changes, we scan the current slide to see whether
