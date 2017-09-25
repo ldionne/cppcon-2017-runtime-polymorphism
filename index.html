@@ -433,6 +433,36 @@ We need to handle cases where the two types are not the same in swap.
 
 ### Some benchmarks
 
+Creating many 16 bytes objects
+<div class="google-chart">
+{
+  "options": {
+    "legend": { "position": "none" },
+    "vAxis": {
+      "title": "Time (ns)",
+      "viewWindow": {
+        "min": [0],
+        "max": [80]
+      }
+    },
+    "hAxis": { "title": "Storage type" }
+  },
+  "data": [
+    ["Storage type", "Time (ns)"],
+    ["inheritance", 55],
+    ["remote storage", 54],
+    ["SBO storage (4 bytes)", 54],
+    ["SBO storage (8 bytes)", 56],
+    ["SBO storage (16 bytes)", 3],
+    ["local storage (16 bytes)", 2]
+  ]
+}
+</div>
+
+----
+
+<!-- .slide: class="slide-hidden" -->
+
 Creating many 4 bytes objects
 <div class="google-chart">
 {
@@ -461,33 +491,7 @@ Creating many 4 bytes objects
 
 ----
 
-Creating many 16 bytes objects
-<div class="google-chart">
-{
-  "options": {
-    "legend": { "position": "none" },
-    "vAxis": {
-      "title": "Time (ns)",
-      "viewWindow": {
-        "min": [0],
-        "max": [80]
-      }
-    },
-    "hAxis": { "title": "Storage type" }
-  },
-  "data": [
-    ["Storage type", "Time (ns)"],
-    ["inheritance", 55],
-    ["remote storage", 54],
-    ["SBO storage (4 bytes)", 54],
-    ["SBO storage (8 bytes)", 56],
-    ["SBO storage (16 bytes)", 3],
-    ["local storage (16 bytes)", 2]
-  ]
-}
-</div>
-
-----
+<!-- .slide: class="slide-hidden" -->
 
 Accessing many 4 bytes objects<br>
 (10 x 3 method calls, SBO with bool)
@@ -613,10 +617,10 @@ Accessing many objects<br>
 ### Guidelines
 
 - Use local storage whenever you can afford it
-- Otherwise, use SBO with the largest size that makes sense
+- Otherwise, use SBO with the largest reasonable size
 - Use purely-remote storage only when
   + Object sizes are so scattered SBO wouldn't help
-  + Few objects are created, but they are moved all the time (???)
+  + Few objects are created, but they are moved often
 
 ====================
 
