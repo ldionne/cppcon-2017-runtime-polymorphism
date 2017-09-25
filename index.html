@@ -676,9 +676,14 @@ int main() {
 
 ![Type erasure with shared remote storage](img/shared_storage.png)
 
-<!-- TODO: Show some use cases (e.g. Sean Parent's `document`) -->
+Note:
+One use case is copy-on-write, where you share everything and make a copy
+whenever you call a non-const function on it. Allows optimal sharing and
+thread safety with minimal headache.
 
 ----
+
+<!-- .slide: class="slide-hidden" -->
 
 ### How that's implemented
 
