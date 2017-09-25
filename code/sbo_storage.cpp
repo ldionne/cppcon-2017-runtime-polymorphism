@@ -10,18 +10,13 @@
 #include <vector>
 
 
-// sample(Vehicle::members)
-class Vehicle {
+// sample(Vehicle)
+struct Vehicle {
   vtable const* const vptr_;
-  union {
-    void* ptr_;
-    std::aligned_storage_t<16> buffer_;
-  };
   bool on_heap_;
-// end-sample
+  union { void* ptr_;
+          std::aligned_storage_t<16> buffer_; };
 
-public:
-// sample(Vehicle::Vehicle)
   template <typename Any>
   Vehicle(Any vehicle) : vptr_{&vtable_for<Any>} {
     if (sizeof(Any) > 16) {
@@ -32,6 +27,9 @@ public:
       new (&buffer_) Any{vehicle};
     }
   }
+
+  void accelerate()
+  { vptr_->accelerate(on_heap_ ? ptr_ : &buffer_); }
 // end-sample
 
   Vehicle(Vehicle const& other) : vptr_{other.vptr_} {
@@ -42,13 +40,6 @@ public:
     }
   }
 
-// sample(Vehicle::accelerate)
-  void accelerate() {
-    vptr_->accelerate(on_heap_ ? ptr_ : &buffer_);
-  }
-// end-sample
-
-// sample(Vehicle::~Vehicle)
   ~Vehicle() {
     if (on_heap_) {
       vptr_->delete_(ptr_);
@@ -56,7 +47,6 @@ public:
       vptr_->dtor(&buffer_);
     }
   }
-// end-sample
 };
 
 
