@@ -39,7 +39,6 @@
 TODO:
 - Consider using `function_ref`, `std::function`, and `inplace_function` as
   guinea pigs. This would give much better real world examples than `Vehicle`.
-- Clean up section on non-owning storage
 - Consider adding a concrete example of how shared_storage can be used
 -->
 
@@ -636,12 +635,14 @@ Accessing many objects<br>
 ### Non-owning storage
 (reference semantics, not value semantics)
 
+![Type erasure with non-owning storage](img/non_owning_storage.png)
+
 ----
 
 ### Basically a polymorphic view
 
 ```c++
-void process(VehicleRef vehicle) {
+void process(Vehicle vehicle) {
   ...
   vehicle.accelerate();
   ...
@@ -649,33 +650,23 @@ void process(VehicleRef vehicle) {
 
 int main() {
   Truck truck{...};
-  process(truck); // Don't want to copy here!
+  process(truck); // No copy!
 }
 ```
 
 ----
 
-### In pictures
-
-![Type erasure with non-owning storage](img/non_owning_storage.png)
-
-----
+<!-- .slide: class="slide-hidden" -->
 
 ### How that's implemented
 
-<pre><code data-sample='code/non_owning_storage.cpp#VehicleRef'></code></pre>
+<pre><code data-sample='code/non_owning_storage.cpp#Vehicle'></code></pre>
 
 ----
 
 ### With Dyno
 
-<pre><code data-sample='code/non_owning_storage.dyno.cpp#VehicleRef'></code></pre>
-
-----
-
-### Usage differs a bit
-
-<pre><code data-sample='code/non_owning_storage.cpp#main'></code></pre>
+<pre><code data-sample='code/non_owning_storage.dyno.cpp#Vehicle'></code></pre>
 
 ====================
 
