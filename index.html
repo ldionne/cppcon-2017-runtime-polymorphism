@@ -39,7 +39,8 @@
 TODO:
 - Consider using `function_ref`, `std::function`, and `inplace_function` as
   guinea pigs. This would give much better real world examples than `Vehicle`.
-- We need to present benchmarks against variant too
+- Clean up section on non-owning storage
+- Consider adding a concrete example of how shared_storage can be used
 -->
 
 ==============================================================================
@@ -220,6 +221,11 @@ for (auto& vehicle : copy) {
   vehicle->accelerate();
 }
 ```
+
+Note:
+We don't really have a choice but to use pointers and allocate on the heap if
+we want to put them in contiguous storage (vector, array, etc...), because the
+objects have different sizes.
 
 ----
 
@@ -412,6 +418,9 @@ We need to handle cases where the two types are not the same in swap.
 ### How that's implemented
 
 <pre><code data-sample='code/local_storage.cpp#Vehicle'></code></pre>
+
+Note:
+Mention that we're not checking for the alignment here.
 
 ----
 
