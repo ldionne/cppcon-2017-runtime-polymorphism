@@ -13,9 +13,9 @@
 // sample(Vehicle)
 struct Vehicle {
   vtable const* const vptr_;
-  bool on_heap_;
   union { void* ptr_;
           std::aligned_storage_t<16> buffer_; };
+  bool on_heap_;
 
   template <typename Any>
   Vehicle(Any vehicle) : vptr_{&vtable_for<Any>} {
