@@ -37,8 +37,6 @@
 
 <!--
 TODO:
-- Consider using `function_ref`, `std::function`, and `inplace_function` as
-  guinea pigs. This would give much better real world examples than `Vehicle`.
 - Consider adding a concrete example of how shared_storage can be used
 -->
 
@@ -687,8 +685,33 @@ thread safety with minimal headache.
 
 <pre><code data-sample='code/shared_remote_storage.cpp#Vehicle'></code></pre>
 
+====================
+
+### Now, let me show you why you care
+
+----
+
+### Have you heard of the following?
+
+- [`std::function`](http://en.cppreference.com/w/cpp/utility/functional/function)
+- [`inplace_function`](https://groups.google.com/a/isocpp.org/d/msg/std-proposals/vven2Om7Ha8/C7qQ_XwVCwAJ)
+- [`function_view`](https://vittorioromeo.info/index/blog/passing_functions_to_functions.html)
+
+----
+
+### Here's all of them:
+
+<pre><code data-sample='code/functions.cpp#basic_function'></code></pre>
+
+----
+
+<pre><code data-sample='code/functions.cpp#function'></code></pre>
+<pre><code data-sample='code/functions.cpp#inplace_function'></code></pre>
+<pre><code data-sample='code/functions.cpp#function_view'></code></pre>
+
 ==============================================================================
 
+### We've talked about storage
 ### What about vtables?
 
 ----
