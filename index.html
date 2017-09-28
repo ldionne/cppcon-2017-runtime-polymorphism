@@ -782,12 +782,11 @@ Calling 2 virtual functions (100 x 2 calls)
 ----
 
 ### Not very conclusive
+### Let's look at assembly
 
 ----
 
-### Let's look at assembly
-
-<iframe class="stretch" src="https://gcc.godbolt.org/e#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAKxAEZSBnVAV2OUxAHIGDjnkCAagBqAFQCGAIwA2mQQFIA7ACF5ABgCCgwQDdUedIIgAqAGa0AlBD0HjF%2BQGZVm7TcMnTAJitu7j51q6%2Bu5mDj7Bfk7qgW5GZgAs4bb2UZpKACL%2B0dEEmAC2AA7S4rkKDgDCBACeBZgAduJ5cqKO2NGYAB65xHUiEjJyaHU8ugRSsllpUxo8fAKCxPmouQD64nVVCirRrsGC5hAWW8q6BbwrALStBwyY0qYrKScZO0EG%2B56Hx6fnVw7YXggt3uj38W0yLjehlMDi%2BShOOjOxEu11hwIeT3Br1ipnicJUP2RfwBePRoKcWMhYnGg1QwwIxkEQxGiPOkxiEUEZPZL1SGmis34QmkqGQ4mkaw2x2xewOR3hoxkKwAdDc7hiwS9ITjPvKCToCErVZ8yZitRz3jD8QjDRLVWj1eTnooIRboXi9TajbigY6zS7XtSBky6SzbSt2btbFzHTyA3yBbwhYI8HUEJhiIR1uxJZt4di8MQCMxxVD9rQ4Q50oI1JHdIXi6WdZXq7W%2Ba4GyXpGWrfKqzW6zpO03ZR6yq245kE5ocRBFnllphc/JPAA2QTiT2vcSqitPbfGw51ne94%2Bqj2T7Iz2UQEViiXrKor9eb6WQk97s%2BA/fv%2B1H9sbue/4BOa0Szqm6aZmMdQ5o%2Bz4bluv5yl%2BupfrCP6BCeF4JgGmicBYpDSFwACsnCkHUXBqGRqBcOUK6qJ4JxMKw7AKJ4Di0GRBCUfhBEANYgMRtDKgAnKuaiKAAHPEHEOIonjEcRhFcPEZEUZwVGkDRnBkQwIBqKQ3EafhpBwLASBoIUeCyGQFAQJZBTWRmKDFHUwDEWoBmmNZ3R6RAkg8aQkipuIxBVFwnGkJZTR1AQADydTSOFxmkFgeTrMAsiBfgiwCHgOiYHpKWdJgyDMLkEVkamuREZwkW8HgeSVaQzB1Fg3l1Jg6CVQR0h4JIemQARqBnHgoZcBccUOIIFw8OgjjpMg9H0bQqmMCwbAcJYymcKR5GBdpHSSauFyrvETKucAgjEcqai3UYuCECQbEcaQgjlKgVk2S9lhcTxFj8SA8SSbdDgiZ4tDEaux2eIo8RCTta3qZp2m6fphn/b1XCeGpB1cH9xkA6QBXEAwY0UfEQA%3D%3D"></iframe>
+<iframe id="godbolt" class="stretch" src="https://gcc.godbolt.org/e#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAKxAEZSBnVAV2OUxAHIGDjnkCAagBqAFQCGAIwA2mQQFIA7ACF5ABgCCgwQDdUedIIgAqAGa0AlBD0HjF%2BQGZVm7TcMnTAJitu7j51q6%2Bu5mDj7Bfk7qgW5GZgAs4bb2UZpKACL%2B0dEEmAC2AA7S4rkKDgDCBACeBZgAduJ5cqKO2NGYAB65xHUiEjJyaHU8ugRSsllpUxo8fAKCxPmouQD64nVVCirRrsGC5hAWW8q6BbwrALStBwyY0qYrKScZO0EG%2B56Hx6fnVw7YXggt3uj38W0yLjehlMDi%2BShOOjOxEu11hwIeT3Br1ipnicJUP2RfwBePRoKcWMhYnGg1QwwIxkEQxGiPOkxiEUEZPZL1SGmis34QmkqGQ4mkaw2x2xewOR3hoxkKwAdDc7hiwS9ITjPvKCToCErVZ8yZitRz3jD8QjDRLVWj1eTnooIRboXi9TajbigY6zS7XtSBky6SzbSt2btbFzHTyA3yBbwhYI8HUEJhiIR1uxJZt4di8MQCMxxVD9rQ4Q50oI1JHdIXi6WdZXq7W%2Ba4GyXpGWrfKqzW6zpO03ZR6yq245kE5ocRBFnllphc/JPAA2QTiT2vcSqitPbfGw51ne94%2Bqj2T7Iz2UQEViiXrKor9eb6WQk97s%2BA/fv%2B1H9sbue/4BOa0Szqm6aZmMdQ5o%2Bz4bluv5yl%2BupfrCP6BCeF4JgGmicBYpDSFwACsnCkHUXBqGRqBcOUK6qJ4JxMKw7AKJ4Di0GRBCUfhBEANYgMRtDKgAnKuaiKAAHPEHEOIonjEcRhFcPEZEUZwVGkDRnBkQwIBqKQ3EafhpBwLASBoIUeCyGQFAQJZBTWRmKDFHUwDEWoBmmNZ3R6RAkg8aQkipuIxBVFwnGkJZTR1AQADydTSOFxmkFgeTrMAsiBfgiwCHgOiYHpKWdJgyDMLkEVkamuREZwkW8HgeSVaQzB1Fg3l1Jg6CVQR0h4JIemQARqBnHgoZcBccUOIIFw8OgjjpMg9H0bQqmMCwbAcJYymcKR5GBdpHSSauFyrvETKucAgjEcqai3UYuCECQbEcaQgjlKgVk2S9lhcTxFj8SA8SSbdDgiZ4tDEaux2eIo8RCTta3qZp2m6fphn/b1XCeGpB1cH9xkA6QBXEAwY0UfEQA%3D%3D"></iframe>
 
 Note:
 Chandler told me:
@@ -1019,6 +1018,32 @@ https://ldionne.com
         $(".slide-hidden").each(function(index, slide) {
           slide.remove();
         });
+      });
+
+      // Returns the next vertical slide, or undefined if there's no next slide.
+      var nextVerticalSlide = function(currentSlide) {
+        var parent = currentSlide.parentNode;
+        var currentIndex = 0;
+        for (; currentIndex < parent.children.length; currentIndex++) {
+            if (parent.children[currentIndex] == currentSlide) {
+              break;
+            }
+        }
+        return parent.children[currentIndex + 1];
+      };
+
+      // When the next slide contains an element with id '#godbolt', we reload
+      // the iframe. This is to workaround a bug where the iframe would otherwise
+      // not be painted properly.
+      Reveal.addEventListener('slidechanged', function(event) {
+        var next = nextVerticalSlide(event.currentSlide);
+        if (next != undefined) {
+          var godbolt = next.querySelector("#godbolt");
+          if (godbolt != undefined) {
+            console.log("Reloading godbolt iframe");
+            godbolt.contentWindow.location.reload(true);
+          }
+        }
       });
 
       // Whenever the slide changes, we scan the current slide to see whether
