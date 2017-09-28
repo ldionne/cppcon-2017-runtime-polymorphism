@@ -63,6 +63,12 @@ using inplace_function = basic_function<Signature,
                                         dyno::local_storage<Size>>;
 // end-sample
 
+// sample(shared_function)
+template <typename Signature>
+using shared_function = basic_function<Signature,
+                                       dyno::shared_remote_storage>;
+// end-sample
+
 
 //
 // Tests
@@ -141,4 +147,5 @@ int main() {
   test<function>();
   test<function_view>();
   test<my_inplace_function>();
+  test<shared_function>();
 }
