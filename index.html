@@ -943,7 +943,7 @@ struct Vehicle {
 };
 
 int main() {
-  std::vector<any<Vehicle>> vehicles;
+  std::vector<poly<Vehicle>> vehicles;
   vehicles.push_back(Car{...});
   vehicles.push_back(Truck{...});
   vehicles.push_back(lib::Motorcycle{...});
