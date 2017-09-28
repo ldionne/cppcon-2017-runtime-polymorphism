@@ -141,30 +141,9 @@ int main() {
 
 ```c++
 void foo(Vehicle* vehicle) {
+  Vehicle* copy = vehicle;
   ...
-  vehicle->accelerate();
-  ...
-}
-```
-
-or
-
-```c++
-void foo(Vehicle& vehicle) {
-  ...
-  vehicle.accelerate();
-  ...
-}
-```
-
-----
-
-### Slices when you try to be clever
-
-```c++
-void foo(Vehicle vehicle) {
-  ...
-  vehicle.accelerate();
+  copy->accelerate();
   ...
 }
 ```
@@ -184,6 +163,11 @@ std::unique_ptr<Vehicle> getVehicle(std::istream& user) {
 }
 ```
 
+Note:
+We don't really have a choice but to use pointers and allocate on the heap if
+we want to put them in contiguous storage (vector, array, etc...), because the
+objects have different sizes.
+
 ----
 
 ### Bakes in nullable semantics
@@ -202,27 +186,6 @@ Vehicle*                 getVehicle(std::istream& user);
 std::unique_ptr<Vehicle> getVehicle(std::istream& user);
 std::shared_ptr<Vehicle> getVehicle(std::istream& user);
 ```
-
-----
-
-### No value semantics
-
-```c++
-std::vector<std::unique_ptr<Vehicle>> vehicles;
-vehicles.push_back(std::make_unique<Car>(...));
-vehicles.push_back(std::make_unique<Truck>(...));
-vehicles.push_back(std::make_unique<Plane>(...));
-
-std::vector<std::unique_ptr<Vehicle>> copy = vehicles;
-for (auto& vehicle : copy) {
-  vehicle->accelerate();
-}
-```
-
-Note:
-We don't really have a choice but to use pointers and allocate on the heap if
-we want to put them in contiguous storage (vector, array, etc...), because the
-objects have different sizes.
 
 ----
 
@@ -289,6 +252,12 @@ int main() {
 ----
 
 ### How might that work?
+
+----
+
+### With inheritance
+
+![Implementation of inheritance](img/inheritance.png)
 
 ----
 
@@ -626,7 +595,6 @@ Accessing many objects<br>
 - Otherwise, use SBO with the largest reasonable size
 - Use purely-remote storage only when
   + Object sizes are so scattered SBO wouldn't help
-  + Few objects are created, but they are moved often
 
 ====================
 
@@ -653,8 +621,6 @@ int main() {
 ```
 
 ----
-
-<!-- .slide: class="slide-hidden" -->
 
 ### How that's implemented
 
@@ -685,6 +651,14 @@ thread safety with minimal headache.
 
 <pre><code data-sample='code/shared_remote_storage.cpp#Vehicle'></code></pre>
 
+----
+
+<!-- .slide: class="slide-hidden" -->
+
+### With Dyno
+
+<pre><code data-sample='code/shared_remote_storage.dyno.cpp#Vehicle'></code></pre>
+
 ====================
 
 ### Now, let me show you why you care
@@ -699,11 +673,13 @@ thread safety with minimal headache.
 
 ----
 
-### Here's all of them:
+### Consider this
 
 <pre><code data-sample='code/functions.cpp#basic_function'></code></pre>
 
 ----
+
+### Here's all of them:
 
 <pre><code data-sample='code/functions.cpp#function'></code></pre>
 <pre><code data-sample='code/functions.cpp#inplace_function'></code></pre>
@@ -833,6 +809,7 @@ __attribute__((noinline)) AnyIterator make(It it) {
 template <typename AnyIterator>
 void benchmark_any_iterator(benchmark::State& state) {
   std::vector<int> input{...};
+  std::vector<int> output{...};
 
   while (state.KeepRunning()) {
     auto first = make<AnyIterator>(input.begin());
